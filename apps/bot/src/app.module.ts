@@ -3,6 +3,7 @@ import { GatewayIntentBits, IntentsBitField } from "discord.js";
 import { NecordModule } from "necord";
 import "dotenv/config";
 import { AppService } from "./app.service";
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { AppService } from "./app.service";
     }),
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
