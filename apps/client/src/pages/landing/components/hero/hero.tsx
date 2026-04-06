@@ -56,10 +56,10 @@ const Hero = () => {
         variants={fadeUp}
         className="flex gap-4"
       >
-        <button className="bg-linear-90 bg-size-[200%_100%] bg-position-[0%] hover:bg-position-[100%] from-violet-600 to-fuchsia-700 text-white rounded-xl  px-6 py-3 cursor-pointer transition-all duration-300">
+        <button className="font-semibold bg-linear-90 bg-size-[200%_100%] bg-position-[0%] hover:bg-position-[100%] from-violet-600 to-fuchsia-700 text-white rounded-xl  px-6 py-3 cursor-pointer transition-all duration-300">
           Add to Discord
         </button>
-        <button className="bg-slate-200/0 border hover:bg-slate-200/20 hover:border-slate-200/50 rounded-xl px-6 py-3 cursor-pointer transition-all duration-300">
+        <button className="font-normal bg-slate-200/0 border hover:bg-slate-200/20 hover:border-slate-200/50 rounded-xl px-6 py-3 cursor-pointer transition-all duration-300">
           View servers
         </button>
       </motion.div>
