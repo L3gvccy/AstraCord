@@ -23,7 +23,7 @@ const Hero = () => {
         custom={1}
         viewport={{ once: true, amount: 0.2 }}
         variants={fadeUp}
-        className="text-6xl font-semibold bg-clip-text text-transparent bg-linear-90 from-violet-600 via-cyan-500 to-teal-600"
+        className="text-6xl font-semibold bg-clip-text text-transparent bg-linear-90 to-violet-600 via-cyan-500 from-teal-600"
       >
         AstraCord
       </motion.p>
