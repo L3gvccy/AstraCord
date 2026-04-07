@@ -59,7 +59,7 @@ const Hero = () => {
         <button className="font-semibold bg-linear-90 bg-size-[200%_100%] bg-position-[0%] hover:bg-position-[100%] from-violet-600 to-fuchsia-700 text-white rounded-xl  px-6 py-3 cursor-pointer transition-all duration-300">
           Add to Discord
         </button>
-        <button className="font-normal bg-slate-200/0 border hover:bg-slate-200/20 hover:border-slate-200/50 rounded-xl px-6 py-3 cursor-pointer transition-all duration-300">
+        <button className="font-normal bg-slate-200/0 border border-slate-500/30 dark:border-slate-200/50 hover:bg-slate-300/20 dark:hover:bg-slate-200/20 hover:border-slate-500/50 rounded-xl px-6 py-3 cursor-pointer transition-all duration-300">
           View servers
         </button>
       </motion.div>
