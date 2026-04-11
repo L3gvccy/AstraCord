@@ -8,6 +8,19 @@ datasource db {
   provider = "postgresql"
 }
 
-model Guild {
-  id String @id @default(uuid())
+model User {
+  id            String   @id
+  username      String
+  globalName    String?
+  discriminator String?
+  avatar        String?
+  banner        String?
+  email         String?
+  locale        String?
+  verified      Boolean?
+  accessToken   String?
+  refreshToken  String?
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
