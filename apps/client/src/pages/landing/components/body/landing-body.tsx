@@ -75,7 +75,7 @@ const LandingBody = () => {
         >
           Features
         </motion.p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
