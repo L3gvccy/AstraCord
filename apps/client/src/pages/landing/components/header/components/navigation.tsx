@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const HeaderNavigation = () => {
   const routes = [
     { title: "Home", route: "/" },
-    { title: "Servers", route: "/" },
+    { title: "Servers", route: "/servers" },
     { title: "Pricing", route: "/" },
   ];
   return (
