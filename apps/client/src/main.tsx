@@ -4,12 +4,16 @@ import "./index.css";
 import App from "./App.tsx";
 import { ThemeProvider } from "./contexts/theme-context.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
+import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
   <ThemeProvider>
-    <App />
-    <Toaster position="top-center" closeButton={true} />
+    <Provider store={store}>
+      <App />
+      <Toaster position="top-center" closeButton={true} />
+    </Provider>
   </ThemeProvider>,
   //* </StrictMode>,
 );
