@@ -5,13 +5,15 @@ import { DISCORD_AUTH_URL } from "@/utils/constants";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import UserDropdown from "@/components/user-dropdown";
+import { useNavigate } from "react-router-dom";
 
 const EndMenu = () => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.userReducer.user);
   const isAuthorized = !!user?.id;
 
   const handleLoginClick = () => {
-    window.location.href = DISCORD_AUTH_URL;
+    navigate("/login");
   };
 
   return (

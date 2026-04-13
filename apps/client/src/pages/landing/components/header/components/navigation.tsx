@@ -5,7 +5,7 @@ const HeaderNavigation = () => {
   const routes = [
     { title: "Home", route: "/" },
     { title: "Servers", route: "/servers" },
-    { title: "Pricing", route: "/" },
+    { title: "Pricing", route: "/pricing" },
   ];
   return (
     <div className="flex gap-4">

@@ -18,10 +18,12 @@ const UserDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("jwt");
-    dispatch(clearUser());
     navigate("/");
-    toast.success("Logged out successfully");
+    requestAnimationFrame(() => {
+      localStorage.removeItem("jwt");
+      dispatch(clearUser());
+      toast.success("Logged out successfully");
+    });
   };
 
   return (
