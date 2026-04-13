@@ -5,7 +5,7 @@ import Header from "../landing/components/header/header";
 
 const servers = [
   {
-    avatar: "public/avatar.png",
+    avatar: "/avatar.png",
     name: "Server1",
     role: "Owner",
     isBotConnected: false,
