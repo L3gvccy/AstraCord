@@ -27,7 +27,7 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className="w-10 h-10 cursor-pointer rounded-full border border-violet-800">
+        <div className="w-10 h-10 cursor-pointer rounded-full border-2 border-violet-400">
           <img
             src={user?.avatar ?? "/guild-logo-fallback.png"}
             alt="Avatar"

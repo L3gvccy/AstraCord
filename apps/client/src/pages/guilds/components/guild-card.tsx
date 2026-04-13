@@ -22,7 +22,7 @@ const GuildCard = ({ avatar, name, role, isBotConnected }: Props) => {
       </div>
 
       <div className="flex flex-col items-center justify-center p-6 gap-4 z-20  relative">
-        <div className="h-24 w-24 overflow-hidden rounded-full border-3 border-violet-500/80 shadow-lg shadow-blue-800/50">
+        <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-violet-400 shadow-lg shadow-violet-800/50">
           <img
             src={imageSrc}
             alt={name}
