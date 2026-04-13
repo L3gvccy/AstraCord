@@ -22,8 +22,10 @@ export class AuthService {
     const params = new URLSearchParams({
       client_id: process.env.DISCORD_CLIENT_ID as string,
       response_type: "code",
-      redirect_uri: process.env.DISCORD_REDIRECT_URI as string,
-      scope: "identify guilds",
+      redirect_uri: new URL(
+        process.env.DISCORD_REDIRECT_URI as string,
+      ).toString(),
+      scope: "identify connections guilds guilds.join email",
       prompt: "consent",
     });
 
@@ -36,7 +38,9 @@ export class AuthService {
       client_secret: process.env.DISCORD_CLIENT_SECRET as string,
       grant_type: "authorization_code",
       code,
-      redirect_uri: process.env.DISCORD_REDIRECT_URI as string,
+      redirect_uri: new URL(
+        process.env.DISCORD_REDIRECT_URI as string,
+      ).toString(),
     });
 
     const response = await fetch("https://discord.com/api/v10/oauth2/token", {
@@ -148,7 +152,6 @@ export class AuthService {
     const jwt = await this.jwtService.signAsync({
       sub: user.id,
       username: user.username,
-      avatar: user.avatar,
     });
 
     return {

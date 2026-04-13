@@ -29,7 +29,7 @@ export class AuthController {
     const { jwt } = await this.authService.loginWithDiscord(code);
 
     return res.redirect(
-      `${process.env.CLIENT_URL}/auth/callback?token=${encodeURIComponent(jwt)}`,
+      `${process.env.ORIGIN}/auth/callback?token=${encodeURIComponent(jwt)}`,
     );
   }
 

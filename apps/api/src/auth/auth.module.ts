@@ -3,18 +3,29 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { PrismaModule } from "@astracord/database";
 import { PassportModule } from "@nestjs/passport";
-import { JwtModule, JwtService } from "@nestjs/jwt";
+import { JwtModule } from "@nestjs/jwt";
+import { JwtStrategy } from "./jwt.strategy";
 
 @Module({
   imports: [
     PrismaModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: "7d" },
+    JwtModule.registerAsync({
+      useFactory: () => {
+        const secret = process.env.JWT_SECRET;
+
+        if (!secret) {
+          throw new Error("JWT_SECRET is not set");
+        }
+
+        return {
+          secret,
+          signOptions: { expiresIn: "7d" },
+        };
+      },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

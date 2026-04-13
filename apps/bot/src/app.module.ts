@@ -5,6 +5,7 @@ import "dotenv/config";
 import { AppService } from "./app.service";
 import { PrismaService } from "./prisma/prisma.service";
 import { HelpModule } from "./help/help.module";
+import { JtcModule } from './jtc/jtc.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { HelpModule } from "./help/help.module";
       ],
     }),
     HelpModule,
+    JtcModule,
   ],
   controllers: [],
   providers: [AppService, PrismaService],
