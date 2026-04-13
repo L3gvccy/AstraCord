@@ -12,7 +12,13 @@ createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <Provider store={store}>
       <App />
-      <Toaster position="top-center" closeButton={true} />
+      <Toaster
+        position="top-center"
+        closeButton={true}
+        toastOptions={{
+          classNames: { toast: "!bg-slate-900/75 backdrop-blur-md" },
+        }}
+      />
     </Provider>
   </ThemeProvider>,
   //* </StrictMode>,

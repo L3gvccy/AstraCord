@@ -11,18 +11,18 @@ const GuildCard = ({ avatar, name, role, isBotConnected }: Props) => {
   const imageSrc = avatar?.trim() ? avatar : "/guild-logo-fallback.png";
 
   return (
-    <div className="group relative mx-auto w-full overflow-hidden rounded-[16px] border border-white/10 bg-violet-900/40 shadow-md shadow-violet-700/30 backdrop-blur-xl transition-all duration-300 hover:shadow-lg">
+    <div className="group relative mx-auto w-full overflow-hidden rounded-[16px] border border-slate-200/35 bg-violet-900/40 shadow-md shadow-violet-700/30 backdrop-blur-xl transition-all duration-300 hover:shadow-lg">
       <div className="absolute inset-0 z-10">
         <img
           src={imageSrc}
           alt={name}
-          className="h-full w-full object-cover opacity-35 blur-sm scale-110"
+          className="h-full w-full object-cover opacity-50 blur-sm scale-110"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-neutral-950/50 to-violet-950/85" />
+        <div className="absolute inset-0 bg-linear-to-b from-neutral-950/50  to-indigo-950" />
       </div>
 
       <div className="flex flex-col items-center justify-center p-6 gap-4 z-20  relative">
-        <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-violet-400 shadow-lg shadow-violet-800/50">
+        <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-violet-400 shadow-lg shadow-violet-800/50 group-hover:scale-105 transition-all duration-300">
           <img
             src={imageSrc}
             alt={name}

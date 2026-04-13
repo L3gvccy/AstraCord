@@ -1,5 +1,5 @@
 import React from "react";
-import { GemIcon, LogIn, LogOut, User } from "lucide-react";
+import { LogIn } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import { DISCORD_AUTH_URL } from "@/utils/constants";
 import { useSelector } from "react-redux";

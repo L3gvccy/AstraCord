@@ -35,7 +35,10 @@ const UserDropdown = () => {
           />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-fit bg-slate-950">
+      <DropdownMenuContent
+        align="end"
+        className="w-fit bg-slate-950/60 backdrop-blur-md mt-3"
+      >
         <Link
           to="/profile"
           className="flex gap-2 items-center px-2 py-1 hover:bg-white/10 rounded-md transition-all duration-300"

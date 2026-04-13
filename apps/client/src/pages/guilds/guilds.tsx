@@ -30,8 +30,11 @@ const fadeUp = {
 const Guilds = () => {
   return (
     <>
-      <Header />
-      <div className="flex w-full items-center justify-center px-8 py-10">
+      <div className="flex flex-col w-full justify-center items-center gap-6 py-6 px-4">
+        <Header />
+        <p className="text-2xl font-semibold tracking-wider uppercase">
+          Servers List
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full max-w-342 gap-6">
           {servers.map((server, i) => (
             <motion.div
