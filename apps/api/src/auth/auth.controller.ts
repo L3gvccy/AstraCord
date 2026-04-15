@@ -10,6 +10,7 @@ import {
 import { AuthService } from "./auth.service";
 import type { Response, Request } from "express";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { CurrentUser } from "../common/decorators/current-user.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -35,13 +36,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
-  async me(@Req() req: Request & { user?: any }) {
-    return this.authService.validateJwtUser(req.user.userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get("guilds")
-  async guilds(@Req() req: Request & { user?: any }) {
-    return this.authService.getUserGuilds(req.user.userId);
+  async me(@CurrentUser() currentUser: { userId: string }) {
+    return this.authService.validateJwtUser(currentUser.userId);
   }
 }

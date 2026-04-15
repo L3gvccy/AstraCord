@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import GuildCard from "./components/guild-card";
 import Header from "../landing/components/header/header";
+import { apiClient } from "@/utils/api-client";
+import { GET_USER_GUILDS_URL } from "@/utils/constants";
 
 const servers = [
   {
@@ -28,6 +30,22 @@ const fadeUp = {
 };
 
 const Guilds = () => {
+  const [loading, setLoading] = useState(true);
+
+  const fetchGuilds = async () => {
+    try {
+      const res = await apiClient.get(GET_USER_GUILDS_URL);
+      console.log(res.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGuilds();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center gap-6 py-6 px-4">

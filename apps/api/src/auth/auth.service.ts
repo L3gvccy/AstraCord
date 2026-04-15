@@ -1,7 +1,9 @@
+import axios from "axios";
 import { PrismaService } from "@astracord/database";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { DiscordUser } from "@astracord/shared";
+import { DISCORD_API_BASE_URL } from "../utils/constants";
 
 type DiscordTokenResponse = {
   access_token: string;
@@ -43,20 +45,27 @@ export class AuthService {
       ).toString(),
     });
 
-    const response = await fetch("https://discord.com/api/v10/oauth2/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: body.toString(),
-    });
+    try {
+      const { data } = await axios.post<DiscordTokenResponse>(
+        `${DISCORD_API_BASE_URL}/oauth2/token`,
+        body.toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new UnauthorizedException(`Discord token exchange failed: ${text}`);
+      return data;
+    } catch (error: any) {
+      throw new UnauthorizedException(
+        `Discord token exchange failed: ${
+          error.response?.data
+            ? JSON.stringify(error.response.data)
+            : error.message
+        }`,
+      );
     }
-
-    return response.json();
   }
 
   async refreshDiscordToken(
@@ -69,35 +78,50 @@ export class AuthService {
       refresh_token: refreshToken,
     });
 
-    const response = await fetch("https://discord.com/api/v10/oauth2/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: body.toString(),
-    });
+    try {
+      const { data } = await axios.post<DiscordTokenResponse>(
+        `${DISCORD_API_BASE_URL}/oauth2/token`,
+        body.toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new UnauthorizedException(`Discord token refresh failed: ${text}`);
+      return data;
+    } catch (error: any) {
+      throw new UnauthorizedException(
+        `Discord token refresh failed: ${
+          error.response?.data
+            ? JSON.stringify(error.response.data)
+            : error.message
+        }`,
+      );
     }
-
-    return response.json();
   }
 
   async getDiscordUser(accessToken: string): Promise<DiscordUser> {
-    const response = await fetch("https://discord.com/api/v10/users/@me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    try {
+      const { data } = await axios.get<DiscordUser>(
+        `${DISCORD_API_BASE_URL}/users/@me`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new UnauthorizedException(`Failed to fetch Discord user: ${text}`);
+      return data;
+    } catch (error: any) {
+      throw new UnauthorizedException(
+        `Failed to fetch Discord user: ${
+          error.response?.data
+            ? JSON.stringify(error.response.data)
+            : error.message
+        }`,
+      );
     }
-
-    return response.json();
   }
 
   buildAvatarUrl(user: DiscordUser) {
@@ -208,25 +232,5 @@ export class AuthService {
     });
 
     return refreshed.access_token;
-  }
-
-  async getUserGuilds(userId: string) {
-    const accessToken = await this.getValidDiscordAccessToken(userId);
-
-    const response = await fetch(
-      "https://discord.com/api/v10/users/@me/guilds",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new UnauthorizedException(`Failed to fetch guilds: ${text}`);
-    }
-
-    return response.json();
   }
 }
