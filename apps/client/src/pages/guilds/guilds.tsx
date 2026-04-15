@@ -5,6 +5,7 @@ import Header from "../landing/components/header/header";
 import { apiClient } from "@/utils/api-client";
 import type { GuildResponseDto } from "@astracord/shared";
 import { GET_USER_GUILDS_URL } from "@/utils/constants";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -47,24 +48,41 @@ const Guilds = () => {
           Servers List
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full max-w-342 gap-6">
-          {guilds.map((guild, i) => (
-            <motion.div
-              key={guild.name}
-              initial="hidden"
-              whileInView="visible"
-              custom={i}
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-            >
-              <GuildCard
-                id={guild.id}
-                icon={guild?.icon}
-                name={guild.name}
-                role={guild.role}
-                isBotConnected={guild.isBotConnected}
-              />
-            </motion.div>
-          ))}
+          {loading ? (
+            [1, 1, 1].map(() => {
+              return (
+                <Skeleton className="flex flex-col items-center justify-center w-full h-67 bg-slate-900 p-6 gap-4 rounded-[16px]">
+                  <Skeleton className="w-23 h-23 rounded-full bg-slate-800" />
+                  <Skeleton className="w-40 h-5 bg-slate-800" />
+                  <Skeleton className="w-15 h-4 bg-slate-800 opacity-85" />
+                  <Skeleton className="w-full h-10 bg-slate-800 rounded-[14px]" />
+                </Skeleton>
+              );
+            })
+          ) : guilds.length > 0 ? (
+            guilds.map((guild, i) => (
+              <motion.div
+                key={guild.name}
+                initial="hidden"
+                whileInView="visible"
+                // custom={i}
+                viewport={{ once: true, amount: 0.2 }}
+                variants={fadeUp}
+              >
+                <GuildCard
+                  id={guild.id}
+                  icon={guild?.icon}
+                  name={guild.name}
+                  role={guild.role}
+                  isBotConnected={guild.isBotConnected}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <p className="text-center opacity-85 text-lg col-span-3">
+              No servers found. You must be owner or admin to manage bot.
+            </p>
+          )}
         </div>
       </div>
     </>

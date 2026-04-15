@@ -41,7 +41,7 @@ const GuildCard = ({ id, icon, name, role, isBotConnected }: Props) => {
         <button
           className={`h-10 w-full rounded-[14px] transition-all duration-300 cursor-pointer ${
             isBotConnected
-              ? "bg-white/90 text-violet-900 hover:bg-white"
+              ? "bg-cyan-600/90 text-white-900 hover:bg-cyan-600"
               : "bg-violet-500 text-white hover:bg-violet-400"
           }`}
         >
