@@ -67,7 +67,8 @@ export class GuildsService {
         }),
       );
 
-      return guilds;
+      const filteredGuilds = guilds.filter((guild) => guild.role !== "Member");
+      return filteredGuilds;
     } catch (error: any) {
       throw new UnauthorizedException(
         `Failed to fetch guilds: ${

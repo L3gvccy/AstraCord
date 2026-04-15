@@ -3,18 +3,8 @@ import { motion } from "framer-motion";
 import GuildCard from "./components/guild-card";
 import Header from "../landing/components/header/header";
 import { apiClient } from "@/utils/api-client";
+import type { GuildResponseDto } from "@astracord/shared";
 import { GET_USER_GUILDS_URL } from "@/utils/constants";
-
-const servers = [
-  {
-    avatar: "/avatar.png",
-    name: "Server1",
-    role: "Owner",
-    isBotConnected: false,
-  },
-  { avatar: "", name: "Server2", role: "Owner", isBotConnected: false },
-  { avatar: "", name: "Server3", role: "Owner", isBotConnected: false },
-];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -32,10 +22,13 @@ const fadeUp = {
 const Guilds = () => {
   const [loading, setLoading] = useState(true);
 
+  const [guilds, setGuilds] = useState<GuildResponseDto[]>([]);
+
   const fetchGuilds = async () => {
     try {
-      const res = await apiClient.get(GET_USER_GUILDS_URL);
+      const res = await apiClient.get<GuildResponseDto[]>(GET_USER_GUILDS_URL);
       console.log(res.data);
+      setGuilds(res.data);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -54,9 +47,9 @@ const Guilds = () => {
           Servers List
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full max-w-342 gap-6">
-          {servers.map((server, i) => (
+          {guilds.map((guild, i) => (
             <motion.div
-              key={server.name}
+              key={guild.name}
               initial="hidden"
               whileInView="visible"
               custom={i}
@@ -64,10 +57,11 @@ const Guilds = () => {
               variants={fadeUp}
             >
               <GuildCard
-                avatar={server.avatar}
-                name={server.name}
-                role={server.role}
-                isBotConnected={server.isBotConnected}
+                id={guild.id}
+                icon={guild?.icon}
+                name={guild.name}
+                role={guild.role}
+                isBotConnected={guild.isBotConnected}
               />
             </motion.div>
           ))}

@@ -1,14 +1,17 @@
 import React from "react";
 
 interface Props {
-  avatar?: string;
+  id: string;
+  icon?: string;
   name: string;
   role: string;
   isBotConnected: boolean;
 }
 
-const GuildCard = ({ avatar, name, role, isBotConnected }: Props) => {
-  const imageSrc = avatar?.trim() ? avatar : "/guild-logo-fallback.png";
+const GuildCard = ({ id, icon, name, role, isBotConnected }: Props) => {
+  const imageSrc = icon?.trim()
+    ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+    : "/guild-logo-fallback.png";
 
   return (
     <div className="group relative mx-auto w-full overflow-hidden rounded-[16px] border border-slate-200/35 bg-violet-900/40 shadow-md shadow-violet-700/30 backdrop-blur-xl transition-all duration-300 hover:shadow-lg">
