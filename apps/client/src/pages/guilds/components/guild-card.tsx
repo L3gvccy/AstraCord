@@ -1,4 +1,6 @@
+import { AUTHORIZE_BOT_TO_SERVER } from "@/utils/constants";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   id: string;
@@ -9,6 +11,7 @@ interface Props {
 }
 
 const GuildCard = ({ id, icon, name, role, isBotConnected }: Props) => {
+  const naviagate = useNavigate();
   const imageSrc = icon?.trim()
     ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
     : "/guild-logo-fallback.png";
@@ -44,6 +47,13 @@ const GuildCard = ({ id, icon, name, role, isBotConnected }: Props) => {
               ? "bg-cyan-600/90 text-white-900 hover:bg-cyan-600"
               : "bg-violet-500 text-white hover:bg-violet-400"
           }`}
+          onClick={() => {
+            if (isBotConnected) {
+              naviagate("/");
+            } else {
+              window.location.href = AUTHORIZE_BOT_TO_SERVER(id);
+            }
+          }}
         >
           {isBotConnected ? "Go to dashboard" : "Add to server"}
         </button>
