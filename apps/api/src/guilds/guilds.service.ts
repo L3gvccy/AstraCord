@@ -37,12 +37,8 @@ export class GuildsService {
             );
 
             isBotConnected = true;
-          } catch (error: any) {
-            if (error.response?.status === 404) {
-              isBotConnected = false;
-            } else {
-              throw error;
-            }
+          } catch {
+            isBotConnected = false;
           }
 
           const isOwner = guild.owner === true;
