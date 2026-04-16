@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./store/userSlice";
 import type { RootState } from "./store/store";
 import LoginRedirect from "./pages/auth/login-redirect";
+import Dashboard from "./pages/dashboard/dashboard";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.userReducer.user);
@@ -63,6 +64,8 @@ function App() {
             </AuthRoute>
           }
         />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+
         <Route
           path="/servers"
           element={
@@ -71,7 +74,15 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/auth/callback" element={<AuthCallback />} />
+
+        <Route
+          path="/dashboard/:guildId"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        ></Route>
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

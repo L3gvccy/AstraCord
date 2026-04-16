@@ -7,7 +7,9 @@ import type { RootState } from "@/store/store";
 import UserDropdown from "@/components/user-dropdown";
 import { useNavigate } from "react-router-dom";
 
-const EndMenu = () => {
+type SizeType = "md" | "lg";
+
+const EndMenu = ({ size = "md" }: { size?: SizeType }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.userReducer.user);
   const isAuthorized = !!user?.id;
@@ -20,7 +22,7 @@ const EndMenu = () => {
     <div className="flex gap-2">
       <ThemeToggle />
       {isAuthorized ? (
-        <UserDropdown />
+        <UserDropdown size={size} />
       ) : (
         <button
           onClick={() => handleLoginClick()}

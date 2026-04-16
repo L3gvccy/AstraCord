@@ -42,14 +42,14 @@ const GuildCard = ({ id, icon, name, role, isBotConnected }: Props) => {
         <p className="text-md font-normal leading-none text-white/80">{role}</p>
 
         <button
-          className={`h-10 w-full rounded-[14px] transition-all duration-300 cursor-pointer ${
+          className={`h-10 w-full rounded-[14px] transition-all duration-300 cursor-pointer hover:tracking-wide ${
             isBotConnected
               ? "bg-cyan-600/90 text-white-900 hover:bg-cyan-600"
               : "bg-violet-500 text-white hover:bg-violet-400"
           }`}
           onClick={() => {
             if (isBotConnected) {
-              naviagate("/");
+              naviagate(`/dashboard/${id}`);
             } else {
               window.location.href = AUTHORIZE_BOT_TO_SERVER(id);
             }
