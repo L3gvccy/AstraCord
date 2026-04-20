@@ -15,19 +15,20 @@ const DashboardHeader = ({ toggleSidebar }: Props) => {
         className="flex md:hidden items-center justify-center"
         onClick={toggleSidebar}
       >
-        <PanelRightClose />
+        <PanelRightClose size={24} className="opacity-85" />
       </button>
+
       <div
-        className="flex gap-4 items-center cursor-pointer"
+        className="absolute left-1/2 -translate-x-1/2 top-2 flex items-center gap-4 cursor-pointer md:static md:translate-x-0"
         onClick={() => {
           navigate("/");
         }}
       >
-        <img src="/logo.png" className="w-[66px]" />
+        <img src="/logo.png" className="w-14 md:w-[66px]" />
         <p className="hidden md:block text-3xl font-bold">AstraCord</p>
       </div>
 
-      <EndMenu size="lg" />
+      <EndMenu size="md" />
     </div>
   );
 };

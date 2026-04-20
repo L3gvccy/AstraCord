@@ -8,16 +8,18 @@ const HeaderNavigation = () => {
     { title: "Pricing", route: "/pricing" },
   ];
   return (
-    <div className="flex gap-4">
-      {routes.map((r) => (
-        <Link
-          to={r.route}
-          className="text-slate-200 hover:text-slate-50 transition-all duration-300"
-        >
-          {r.title}
-        </Link>
-      ))}
-    </div>
+    <>
+      <div className="hidden sm:flex gap-4">
+        {routes.map((r) => (
+          <Link
+            to={r.route}
+            className="text-slate-200 hover:text-slate-50 transition-all duration-300"
+          >
+            {r.title}
+          </Link>
+        ))}
+      </div>
+    </>
   );
 };
 

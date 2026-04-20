@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="px-4">
-      <div className="flex items-center gap-6 bg-slate-800 border border-slate-500 shadow-lg shadow-cyan-800/20 rounded-2xl px-4 py-2">
+    <header className="px-4 flex w-full justify-center">
+      <div className="flex items-center justify-between gap-6 bg-slate-800 border border-slate-500 shadow-lg shadow-cyan-800/20 rounded-2xl px-4 py-2 w-full max-w-97">
         <Link to="/">
           <img src="/logo.png" className="w-10" />
         </Link>
