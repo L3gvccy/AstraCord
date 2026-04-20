@@ -167,10 +167,10 @@ const DashboardNav = ({
 
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     AUTOMATION: true,
-    SUPPORT: false,
-    MODERATION: false,
-    COMMUNITY: false,
-    LOGS: false,
+    SUPPORT: true,
+    MODERATION: true,
+    COMMUNITY: true,
+    LOGS: true,
   });
 
   const activeSections = useMemo(() => {
