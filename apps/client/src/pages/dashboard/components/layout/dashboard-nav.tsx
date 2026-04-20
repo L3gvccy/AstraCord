@@ -19,7 +19,6 @@ import {
   TriangleAlert,
   ArrowLeft,
   PanelLeftClose,
-  PanelLeftOpen,
 } from "lucide-react";
 import DashboardNavItem from "./dashboard-nav-item";
 
@@ -32,9 +31,14 @@ interface GuildInfo {
 interface DashboardNavProps {
   guild?: GuildInfo;
   isCollapsed: boolean;
+  toggleSidebar: () => void;
 }
 
-const DashboardNav = ({ guild, isCollapsed }: DashboardNavProps) => {
+const DashboardNav = ({
+  guild,
+  isCollapsed,
+  toggleSidebar,
+}: DashboardNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -205,121 +209,138 @@ const DashboardNav = ({ guild, isCollapsed }: DashboardNavProps) => {
   };
 
   return (
-    <aside
-      className={`shrink-0 rounded-[20px] border border-white/5 bg-[#18243b] p-3 text-white transition-all duration-300 ${
-        isCollapsed ? "w-[88px]" : "w-[220px]"
-      }`}
-    >
-      <div className="mb-4 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate("/servers")}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-300 transition hover:bg-white/5 hover:text-white"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-      </div>
-      <div className="mb-6 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-14 w-14 overflow-hidden rounded-full border border-white/10 bg-white/10">
-            <img
-              src={imageSrc}
-              alt={guild?.name || "Server"}
-              className="h-full w-full object-cover"
-            />
-          </div>
+    <>
+      {!isCollapsed && (
+        <div
+          className="fade-anim fixed md:hidden top-0 left-0 w-full h-screen z-40 bg-black/20"
+          onClick={toggleSidebar}
+        />
+      )}
 
-          {!isCollapsed && (
+      <aside
+        className={`fixed md:relative h-screen md:h-fit min-w-64 shrink-0 md:rounded-[20px] overflow-y-auto md:overflow-hidden border border-white/5 bg-[#18243b] p-4 text-white transition-all duration-500 z-50 ${
+          isCollapsed
+            ? "-left-full md:left-0 top-0"
+            : "top-0 left-0 overscroll-contain"
+        }`}
+      >
+        <div className=" w-full flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => navigate("/servers")}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-300 transition hover:bg-white/5 hover:text-white cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl text-slate-300 transition hover:bg-white/5 hover:text-white cursor-pointer"
+          >
+            <PanelLeftClose className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="mb-6 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-14 w-14 overflow-hidden rounded-full border border-white/10 bg-white/10">
+              <img
+                src={imageSrc}
+                alt={guild?.name || "Server"}
+                className="h-full w-full object-cover"
+              />
+            </div>
+
             <h2 className="max-w-[180px] truncate text-center text-lg font-semibold">
               {guild?.name || "ServerName"}
             </h2>
-          )}
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-3">
-        {navSections.map((section) => {
-          const SectionIcon = section.icon;
-          const isOpen = openSections[section.label];
-          const isSectionActive = activeSections[section.label];
+        <div className="space-y-3">
+          {navSections.map((section) => {
+            const SectionIcon = section.icon;
+            const isOpen = openSections[section.label];
+            const isSectionActive = activeSections[section.label];
 
-          if (isCollapsed) {
+            // if (isCollapsed) {
+            //   return (
+            //     <div key={section.label} className="space-y-2">
+            //       <div className="flex justify-center">
+            //         <div
+            //           className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+            //             isSectionActive
+            //               ? "bg-white/10 text-white"
+            //               : "text-slate-400"
+            //           }`}
+            //         >
+            //           <SectionIcon className="h-4 w-4" />
+            //         </div>
+            //       </div>
+
+            //       <div className="space-y-1">
+            //         {section.items.map((item) => (
+            //           <DashboardNavItem
+            //             key={item.title}
+            //             title={item.title}
+            //             href={item.href}
+            //             icon={item.icon}
+            //             isCollapsed={isCollapsed}
+            //           />
+            //         ))}
+            //       </div>
+            //     </div>
+            //   );
+            // }
+
             return (
-              <div key={section.label} className="space-y-2">
-                <div className="flex justify-center">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                      isSectionActive
-                        ? "bg-white/10 text-white"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    <SectionIcon className="h-4 w-4" />
-                  </div>
-                </div>
+              <div key={section.label} className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => toggleSection(section.label)}
+                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition-all ${
+                    isSectionActive
+                      ? "bg-white/10 text-white"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <SectionIcon className="h-4 w-4 shrink-0" />
+                    <span>{section.label}</span>
+                  </span>
 
-                <div className="space-y-1">
-                  {section.items.map((item) => (
-                    <DashboardNavItem
-                      key={item.title}
-                      title={item.title}
-                      href={item.href}
-                      icon={item.icon}
-                      isCollapsed={isCollapsed}
-                    />
-                  ))}
+                  <ChevronDown
+                    className={`h-4 w-4 shrink-0 transition-transform ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                <div
+                  className={`grid overflow-hidden transition-all duration-300 ${
+                    isOpen
+                      ? "grid-rows-[1fr] opacity-100"
+                      : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="min-h-0 space-y-1 pl-2">
+                    {section.items.map((item) => (
+                      <DashboardNavItem
+                        key={item.title}
+                        title={item.title}
+                        href={item.href}
+                        icon={item.icon}
+                        isCollapsed={false}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             );
-          }
-
-          return (
-            <div key={section.label} className="space-y-1">
-              <button
-                type="button"
-                onClick={() => toggleSection(section.label)}
-                className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition-all ${
-                  isSectionActive
-                    ? "bg-white/10 text-white"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <SectionIcon className="h-4 w-4 shrink-0" />
-                  <span>{section.label}</span>
-                </span>
-
-                <ChevronDown
-                  className={`h-4 w-4 shrink-0 transition-transform ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              <div
-                className={`grid overflow-hidden transition-all duration-300 ${
-                  isOpen
-                    ? "grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
-                }`}
-              >
-                <div className="min-h-0 space-y-1 pl-2">
-                  {section.items.map((item) => (
-                    <DashboardNavItem
-                      key={item.title}
-                      title={item.title}
-                      href={item.href}
-                      icon={item.icon}
-                      isCollapsed={false}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </aside>
+          })}
+        </div>
+      </aside>
+    </>
   );
 };
 
