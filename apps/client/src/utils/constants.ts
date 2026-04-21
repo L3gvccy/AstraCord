@@ -12,3 +12,5 @@ export const GET_ME_URL = `${AUTH_URL}/me`;
 
 export const GUILDS_URL = `${API_URL}/guilds`;
 export const GET_USER_GUILDS_URL = `${GUILDS_URL}`;
+export const GET_GUILD_BY_ID_URL = (guildId: string) =>
+  `${GUILDS_URL}/get-by-id/${guildId}`;

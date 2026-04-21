@@ -3,6 +3,7 @@ import { AuthService } from "../auth/auth.service";
 import axios from "axios";
 import { DISCORD_API_BASE_URL } from "../utils/constants";
 import { DISCORD_PERMISSIONS } from "../utils/utils";
+import { GuildType } from "@astracord/shared";
 
 @Injectable()
 export class GuildsService {
@@ -75,5 +76,26 @@ export class GuildsService {
         }`,
       );
     }
+  }
+
+  async getGuildById(id: string) {
+    try {
+      const { data: guildData } = await axios.get(
+        `${DISCORD_API_BASE_URL}/guilds/${id}`,
+        {
+          headers: {
+            Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+          },
+        },
+      );
+
+      const guild: GuildType = {
+        id: guildData.id,
+        name: guildData.name,
+        icon: guildData?.icon,
+      };
+
+      return { guild };
+    } catch (error) {}
   }
 }

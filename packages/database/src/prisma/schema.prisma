@@ -24,3 +24,21 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model WelcomeMessageCfg {
+  id            String @id @default(uuid())
+  guildId       String @unique
+
+  isEnabled     Boolean @default(false)
+  channelId     String
+
+  isEmbed       Boolean
+
+  message       String @default("Welcome, {user}!")
+
+  title         String?
+
+  color         String?
+  displayAvatar Boolean @default(false)
+  imageUrl      String?
+}

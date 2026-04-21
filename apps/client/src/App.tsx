@@ -11,6 +11,8 @@ import { setUser } from "./store/userSlice";
 import type { RootState } from "./store/store";
 import LoginRedirect from "./pages/auth/login-redirect";
 import Dashboard from "./pages/dashboard/dashboard";
+import Welcome from "./pages/dashboard/components/welcome/welcome";
+import DashboardIndex from "./pages/dashboard/components/index/dashboard-index";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.userReducer.user);
@@ -82,7 +84,10 @@ function App() {
               <Dashboard />
             </PrivateRoute>
           }
-        ></Route>
+        >
+          <Route index element={<DashboardIndex />} />
+          <Route path="welcome" element={<Welcome />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

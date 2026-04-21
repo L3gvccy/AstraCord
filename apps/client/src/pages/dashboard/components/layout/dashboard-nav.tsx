@@ -21,15 +21,10 @@ import {
   PanelLeftClose,
 } from "lucide-react";
 import DashboardNavItem from "./dashboard-nav-item";
-
-interface GuildInfo {
-  id: string;
-  icon?: string;
-  name: string;
-}
+import type { GuildType } from "@astracord/shared";
 
 interface DashboardNavProps {
-  guild?: GuildInfo;
+  guild: GuildType | undefined;
   isCollapsed: boolean;
   toggleSidebar: () => void;
 }
@@ -41,8 +36,8 @@ const DashboardNav = ({
 }: DashboardNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = useParams();
-  const guildId = guild?.id ?? id ?? "";
+  let { guildId: id } = useParams();
+  const guildId = guild?.id ?? id ?? "1234";
 
   const imageSrc = guild?.icon?.trim()
     ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
@@ -212,7 +207,7 @@ const DashboardNav = ({
     <>
       {!isCollapsed && (
         <div
-          className="fade-anim fixed lg:hidden top-0 left-0 w-full h-screen z-40 bg-black/20 backdrop-blur-[2px]"
+          className="fixed lg:hidden top-0 left-0 w-full h-screen z-40 bg-black/20 backdrop-blur-[2px]"
           onClick={toggleSidebar}
         />
       )}
