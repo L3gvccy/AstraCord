@@ -19,17 +19,17 @@ const Dashboard = () => {
   }, [isSidebarCollapsed]);
 
   return (
-    <div className="flex w-full justify-center">
-      <div className="flex w-full flex-col gap-4 px-4 pb-4">
+    <div className="flex h-screen w-full justify-center overflow-hidden">
+      <div className="flex h-full w-full flex-col gap-4 px-4 py-4 overflow-hidden">
         <DashboardHeader toggleSidebar={toggleSidebar} />
 
-        <div className="relative flex gap-3">
+        <div className="relative flex flex-1 min-h-0 gap-3">
           <DashboardNav
             isCollapsed={isSidebarCollapsed}
             toggleSidebar={toggleSidebar}
           />
 
-          <main className="min-h-[calc(100vh-92px)] flex-1 rounded-[20px] border border-white/5 bg-[#18243b] transition-all duration-300">
+          <main className="flex-1 min-h-0 overflow-y-auto rounded-[20px] border border-white/5 bg-slate-900 transition-all duration-300">
             contentplaceholder
           </main>
         </div>

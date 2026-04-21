@@ -28,8 +28,8 @@ const EndMenu = ({ size = "md" }: { size?: SizeType }) => {
           onClick={() => handleLoginClick()}
           className="flex gap-2 items-center rounded-xl px-4 py-1 text-slate-200 border border-slate-200 hover:text-slate-800 hover:bg-slate-200 cursor-pointer transition-all duration-300"
         >
-          <LogIn size={18} />
-          <p>Login</p>
+          <LogIn size={18} className="my-1.5" />
+          <p className="hidden md:block">Login</p>
         </button>
       )}
     </div>

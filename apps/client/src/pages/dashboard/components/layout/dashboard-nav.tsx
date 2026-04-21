@@ -212,15 +212,15 @@ const DashboardNav = ({
     <>
       {!isCollapsed && (
         <div
-          className="fade-anim fixed md:hidden top-0 left-0 w-full h-screen z-40 bg-black/20"
+          className="fade-anim fixed lg:hidden top-0 left-0 w-full h-screen z-40 bg-black/20 backdrop-blur-[2px]"
           onClick={toggleSidebar}
         />
       )}
 
       <aside
-        className={`fixed md:relative h-screen md:h-fit min-w-64 shrink-0 md:rounded-[20px] overflow-y-auto md:overflow-hidden border border-white/5 bg-[#18243b] p-4 text-white transition-all duration-500 z-50 ${
+        className={`fixed lg:relative h-screen md:h-full min-w-64 w-full sm:w-auto shrink-0 lg:rounded-[20px] overflow-y-auto hide-scrollbar border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 p-4 text-white transition-all duration-500 z-50 ${
           isCollapsed
-            ? "-left-full md:left-0 top-0"
+            ? "-left-full lg:left-0 top-0"
             : "top-0 left-0 overscroll-contain"
         }`}
       >
@@ -236,7 +236,7 @@ const DashboardNav = ({
           <button
             type="button"
             onClick={toggleSidebar}
-            className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl text-slate-300 transition hover:bg-white/5 hover:text-white cursor-pointer"
+            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-xl text-slate-300 transition hover:bg-white/5 hover:text-white cursor-pointer"
           >
             <PanelLeftClose className="h-5 w-5" />
           </button>

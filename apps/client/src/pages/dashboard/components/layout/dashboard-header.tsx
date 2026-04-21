@@ -10,9 +10,9 @@ interface Props {
 const DashboardHeader = ({ toggleSidebar }: Props) => {
   const navigate = useNavigate();
   return (
-    <div className="flex relative justify-between w-full p-4 bg-slate-800 rounded-b-[18px]">
+    <div className="flex relative justify-between w-full px-4 py-4 bg-slate-900 rounded-b-[18px]">
       <button
-        className="flex md:hidden items-center justify-center"
+        className="flex lg:hidden items-center justify-center"
         onClick={toggleSidebar}
       >
         <PanelRightClose size={24} className="opacity-85" />
@@ -24,8 +24,8 @@ const DashboardHeader = ({ toggleSidebar }: Props) => {
           navigate("/");
         }}
       >
-        <img src="/logo.png" className="w-14 md:w-[66px]" />
-        <p className="hidden md:block text-3xl font-bold">AstraCord</p>
+        <img src="/logo.png" className="w-14 md:w-15" />
+        <p className="hidden md:block text-2xl font-bold">AstraCord</p>
       </div>
 
       <EndMenu size="md" />
