@@ -78,6 +78,23 @@ export class GuildsService {
     }
   }
 
+  async getGuildChannels(id: string) {
+    try {
+      const { data } = await axios.get(
+        `${DISCORD_API_BASE_URL}/guilds/${id}/channels`,
+        {
+          headers: {
+            Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (error) {
+      return undefined;
+    }
+  }
+
   async getGuildById(id: string) {
     try {
       const { data: guildData } = await axios.get(
@@ -95,7 +112,9 @@ export class GuildsService {
         icon: guildData?.icon,
       };
 
-      return { guild };
+      const channels = await this.getGuildChannels(id);
+
+      return { guild, channels };
     } catch (error) {}
   }
 }
