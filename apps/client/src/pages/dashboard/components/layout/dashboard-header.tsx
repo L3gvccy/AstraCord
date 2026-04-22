@@ -10,7 +10,7 @@ interface Props {
 const DashboardHeader = ({ toggleSidebar }: Props) => {
   const navigate = useNavigate();
   return (
-    <div className="flex relative justify-between w-full px-4 py-4 bg-slate-900 rounded-[20px]">
+    <div className="flex relative justify-between w-full px-4 py-4 bg-linear-180 from-violet-950 to-blue-950 rounded-[20px]">
       <button
         className="flex lg:hidden items-center justify-center"
         onClick={toggleSidebar}
