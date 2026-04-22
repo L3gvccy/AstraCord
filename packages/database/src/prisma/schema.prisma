@@ -30,9 +30,9 @@ model WelcomeMessageCfg {
   guildId       String @unique
 
   isEnabled     Boolean @default(false)
-  channelId     String
+  channelId     String?
 
-  isEmbed       Boolean
+  isEmbed       Boolean @default(false)
 
   message       String @default("Welcome, {user}!")
 
