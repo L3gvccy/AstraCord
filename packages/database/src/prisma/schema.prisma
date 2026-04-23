@@ -38,7 +38,7 @@ model WelcomeMessageCfg {
 
   title         String?
 
-  color         String?
+  color         String? @default("#9b59b6")
   displayAvatar Boolean @default(false)
   imageUrl      String?
 }
