@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import DashboardHeader from "./components/layout/dashboard-header";
 import DashboardNav from "./components/layout/dashboard-nav";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { apiClient } from "@/utils/api-client";
 import { GET_GUILD_BY_ID_URL } from "@/utils/constants";
-import type { GuildType } from "@astracord/shared";
+import type { ChannelType, GuildType, RoleType } from "@astracord/shared";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [guildInfo, setGuildInfo] = useState<GuildType | undefined>();
+  const [channels, setChannels] = useState<[ChannelType]>();
+  const [roles, setRoles] = useState<[RoleType]>();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const { guildId } = useParams();
 
@@ -35,14 +38,16 @@ const Dashboard = () => {
     try {
       const res = await apiClient.get(GET_GUILD_BY_ID_URL(guildId));
       const guildInfo: GuildType = res.data.guild;
+      const channels: [ChannelType] = res.data.channels;
+      const roles: [RoleType] = res.data.roles;
       setGuildInfo(guildInfo);
+      setChannels(channels);
+      setRoles(roles);
       console.log(res.data);
     } catch (error) {
       navigate("/servers");
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      setLoading(false);
     }
   };
 
@@ -94,7 +99,15 @@ const Dashboard = () => {
             />
 
             <main className="flex-1 p-4 min-h-0 overflow-y-auto rounded-[20px] border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 transition-all duration-300">
-              <Outlet />
+              <Outlet
+                context={
+                  {
+                    guildInfo,
+                    channels,
+                    roles,
+                  } satisfies DashboardOutletContext
+                }
+              />
             </main>
           </div>
         )}
