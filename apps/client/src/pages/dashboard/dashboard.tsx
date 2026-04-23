@@ -57,7 +57,7 @@ const Dashboard = () => {
 
         {loading || !guildInfo ? (
           <div className="relative flex flex-1 min-h-0 gap-4">
-            <div className="hidden md:flex flex-col items-center min-w-64 w-auto rounded-[20px] overflow-hidden border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 p-4">
+            <div className="hidden lg:flex flex-col items-center min-w-64 w-auto rounded-[20px] overflow-hidden border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 p-4">
               <div className="block h-10 w-full p-1">
                 <Skeleton className="rounded-xl w-8 h-8 bg-slate-900" />
               </div>
