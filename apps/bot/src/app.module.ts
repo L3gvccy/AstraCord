@@ -6,6 +6,7 @@ import { AppService } from "./app.service";
 import { PrismaService } from "./prisma/prisma.service";
 import { HelpModule } from "./help/help.module";
 import { JtcModule } from './jtc/jtc.module';
+import { WelcomeMessageModule } from './welcome-message/welcome-message.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { JtcModule } from './jtc/jtc.module';
     }),
     HelpModule,
     JtcModule,
+    WelcomeMessageModule,
   ],
   controllers: [],
   providers: [AppService, PrismaService],
