@@ -1,5 +1,4 @@
-export type WelcomeCfg = {
-  id: string;
+export interface UpdateWelcomeCfgDto {
   guildId: string;
   isEnabled: boolean;
   channelId: string;
@@ -9,4 +8,4 @@ export type WelcomeCfg = {
   color?: string;
   displayAvatar: boolean;
   imageUrl?: string;
-};
+}

@@ -18,3 +18,4 @@ export const GET_GUILD_BY_ID_URL = (guildId: string) =>
 export const WELCOME_URL = `${API_URL}/welcome-message`;
 export const GET_WELCOME_CONFIG_URL = (guildId: string) =>
   `${WELCOME_URL}/get-config/${guildId}`;
+export const UPDATE_WELCOME_CONFIG_URL = `${WELCOME_URL}/update-config`;

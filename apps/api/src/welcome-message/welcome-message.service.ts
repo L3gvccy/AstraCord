@@ -1,5 +1,10 @@
 import { PrismaService } from "@astracord/database";
-import { Injectable } from "@nestjs/common";
+import { UpdateWelcomeCfgDto } from "@astracord/shared";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 
 @Injectable()
 export class WelcomeMessageService {
@@ -17,5 +22,34 @@ export class WelcomeMessageService {
       });
       return newConfig;
     }
+  }
+
+  async updateWelcomeConfig(dto: UpdateWelcomeCfgDto) {
+    const existingCfg = await this.prisma.welcomeMessageCfg.findUnique({
+      where: { guildId: dto.guildId },
+    });
+
+    if (!existingCfg)
+      throw new NotFoundException("Welcome message config not found");
+
+    if (!dto.message || !dto.channelId) {
+      throw new BadRequestException("ChannelId and message are required");
+    }
+
+    const updatedCfg = await this.prisma.welcomeMessageCfg.update({
+      where: { guildId: dto.guildId },
+      data: {
+        isEnabled: dto.isEnabled,
+        channelId: dto.channelId,
+        isEmbed: dto.isEmbed,
+        message: dto.message,
+        title: dto?.title,
+        color: dto?.color,
+        displayAvatar: dto.displayAvatar,
+        imageUrl: dto?.imageUrl,
+      },
+    });
+
+    return updatedCfg;
   }
 }
