@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import DashboardHeader from "./components/layout/dashboard-header";
 import DashboardNav from "./components/layout/dashboard-nav";
@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 
 const Dashboard = () => {
+  const mainRef = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [guildInfo, setGuildInfo] = useState<GuildType | undefined>();
@@ -98,16 +99,22 @@ const Dashboard = () => {
               toggleSidebar={toggleSidebar}
             />
 
-            <main className="relative flex-1 p-4 min-h-0 overflow-y-auto rounded-[20px] border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 transition-all duration-300">
-              <Outlet
-                context={
-                  {
-                    guildInfo,
-                    channels,
-                    roles,
-                  } satisfies DashboardOutletContext
-                }
-              />
+            <main
+              ref={mainRef}
+              className="relative flex-1 min-h-0 overflow-hidden rounded-[20px] border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 transition-all duration-300"
+            >
+              <div className="h-full overflow-y-auto p-4 pb-28">
+                <Outlet
+                  context={
+                    {
+                      guildInfo,
+                      channels,
+                      roles,
+                      mainRef,
+                    } satisfies DashboardOutletContext
+                  }
+                />
+              </div>
             </main>
           </div>
         )}

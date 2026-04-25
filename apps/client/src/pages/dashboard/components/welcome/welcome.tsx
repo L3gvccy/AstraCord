@@ -1,5 +1,6 @@
 import { DashboardOutletHeader } from "@/components/dashboard-outlet-header";
 import SaveChangesPopup from "@/components/save-changes-popup";
+import ColorPicker from "@/components/ui/color-picker";
 import {
   Select,
   SelectContent,
@@ -16,7 +17,8 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 const Welcome = () => {
-  const { guildInfo, channels } = useOutletContext<DashboardOutletContext>();
+  const { guildInfo, channels, mainRef } =
+    useOutletContext<DashboardOutletContext>();
   const textChannels = channels?.filter((channel) => channel.type === 0);
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<WelcomeCfg | undefined>();
@@ -120,78 +122,134 @@ const Welcome = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="flex flex-col w-fit gap-2">
+                <div className="flex rounded-xl border">
+                  <div
+                    className={`px-4 py-2 rounded-lg cursor-pointer transition-all duration-150 ${!config.isEmbed && "bg-violet-600"}`}
+                    onClick={() => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+
+                        return { ...prev, isEmbed: false };
+                      });
+                    }}
+                  >
+                    <p className="text-md">Text message</p>
+                  </div>
+                  <div
+                    className={`px-4 py-2 rounded-lg cursor-pointer transition-all duration-150 ${config.isEmbed && "bg-violet-600"}`}
+                    onClick={() => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+
+                        return { ...prev, isEmbed: true };
+                      });
+                    }}
+                  >
+                    <p className="text-md">Embed message</p>
+                  </div>
+                </div>
+              </div>
+
               {config.isEmbed ? (
-                <div className="flex flex-col gap-3">
-                  <p className="text-lg font-semibold text-white">
-                    Embed editor
-                  </p>
-                  <p className="text-sm text-slate-400 pb-3 ">
-                    Use {"{user}"} to mention user in message
-                  </p>
-                  <textarea
-                    value={config.message || ""}
-                    onChange={(e) => {
-                      setConfig((prev) => {
-                        if (!prev) return undefined;
-                        return { ...prev, message: e.target.value };
-                      });
-                    }}
-                    placeholder="Message..."
-                    className="min-h-24 resize-none rounded-lg border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
-                  />
+                <div className="flex gap-3 max-w-156">
+                  <div
+                    className={`w-1 shrink-0 self-stretch rounded-l-xl`}
+                    style={{ backgroundColor: config.color || "#8b5cf6" }}
+                  ></div>
+                  <div className="flex flex-col gap-4 w-full">
+                    <div className="flex flex-col">
+                      <p className="text-lg">Title</p>
+                      <input
+                        value={config.title || ""}
+                        onChange={(e) => {
+                          setConfig((prev) => {
+                            if (!prev) return undefined;
+                            return { ...prev, title: e.target.value };
+                          });
+                        }}
+                        placeholder="Title..."
+                        className="rounded-lg mt-2 border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                      />
+                    </div>
 
-                  <input
-                    value={config.title || ""}
-                    onChange={(e) => {
-                      setConfig((prev) => {
-                        if (!prev) return undefined;
-                        return { ...prev, title: e.target.value };
-                      });
-                    }}
-                    placeholder="Title..."
-                    className="rounded-lg border  border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
-                  />
+                    <div className="flex flex-col">
+                      <p className="text-lg">Description</p>
+                      <p className="text-sm opacity-85">{`Use {user} to mention user in message`}</p>
+                      <textarea
+                        value={config.message}
+                        onChange={(e) => {
+                          setConfig((prev) => {
+                            if (!prev) return undefined;
 
-                  <input
-                    type="color"
-                    value={config.color || "#8b5cf6"}
-                    onChange={(e) => {
-                      setConfig((prev) => {
-                        if (!prev) return undefined;
-                        return { ...prev, color: e.target.value };
-                      });
-                    }}
-                    className="h-10 w-24 cursor-pointer rounded-md border border-grey-700"
-                  />
+                            return { ...prev, message: e.target.value };
+                          });
+                        }}
+                        className="mt-3 w-full border-gray-800 bg-gray-800 text-white focus:border-violet-500 border rounded-xl p-3 focus:outline-0 resize-none"
+                      />
+                    </div>
 
-                  <input
-                    value={config.imageUrl || ""}
-                    onChange={(e) => {
-                      setConfig((prev) => {
-                        if (!prev) return undefined;
-                        return { ...prev, imageUrl: e.target.value };
-                      });
-                    }}
-                    placeholder="Image URL..."
-                    className="rounded-lg border  border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
-                  />
+                    <div className="flex gap-3 items-center">
+                      <p className="text-lg">Display user avatar</p>
+                      <Switch
+                        checked={config.displayAvatar}
+                        onCheckedChange={() => {
+                          setConfig((prev) => {
+                            if (!prev) return undefined;
+
+                            return {
+                              ...prev,
+                              displayAvatar: !prev.displayAvatar,
+                            };
+                          });
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex flex-col w-fit gap-3">
+                      <p className="text-lg">Color</p>
+                      <ColorPicker
+                        color={config?.color}
+                        onChange={(color) => {
+                          setConfig((prev) => {
+                            if (!prev) return undefined;
+                            return { ...prev, color };
+                          });
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <p className="text-lg">Image URL</p>
+                      <input
+                        value={config.imageUrl || ""}
+                        onChange={(e) => {
+                          setConfig((prev) => {
+                            if (!prev) return undefined;
+                            return { ...prev, imageUrl: e.target.value };
+                          });
+                        }}
+                        placeholder="Image URL..."
+                        className="rounded-lg w-full border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="flex flex-col gap-1">
-                  <p className="text-lg font-semibold">Text message</p>
-                  <p className="text-sm text-slate-400 pb-3 ">
-                    Use {"{user}"} to mention user in message
-                  </p>
+                <div className="flex flex-col">
+                  <p className="text-lg">Message</p>
+                  <p className="text-sm opacity-85">{`Use {user} to mention user in message`}</p>
                   <textarea
-                    value={config.message || ""}
+                    value={config.message}
                     onChange={(e) => {
                       setConfig((prev) => {
                         if (!prev) return undefined;
+
                         return { ...prev, message: e.target.value };
                       });
                     }}
-                    placeholder="Enter welcome message..."
-                    className="min-h-32  resize-none rounded-lg border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                    className="mt-4 max-w-156 border-gray-800 bg-gray-800 text-white focus:border-violet-500 border rounded-xl p-3 focus:outline-0 resize-none"
                   />
                 </div>
               )}
@@ -199,7 +257,13 @@ const Welcome = () => {
           )}
         </div>
       </div>
-      {cfgChanged && <SaveChangesPopup />}
+      {cfgChanged && (
+        <SaveChangesPopup
+          container={mainRef.current}
+          onCancel={() => {}}
+          onSave={() => {}}
+        />
+      )}
     </>
   );
 };
