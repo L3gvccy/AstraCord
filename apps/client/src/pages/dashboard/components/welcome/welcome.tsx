@@ -81,7 +81,7 @@ const Welcome = () => {
               <p className="text-lg font-semibold">Channel</p>
               <Select
                 value={config.channelId || ""}
-                onValueChange={(value) => {
+                onValueChange={(value: any) => {
                   if (!value) return;
 
                   setConfig((prev) => {
@@ -144,6 +144,81 @@ const Welcome = () => {
                   <p className="text-md">Embed message</p>
                 </div>
               </div>
+              {config.isEmbed ? (
+                <div className="flex flex-col gap-3">
+                  <p className="text-lg font-semibold text-white">
+                    Embed editor
+                  </p>
+                  <p className="text-sm text-slate-400 pb-3 ">
+                    Use {"{user}"} to mention user in message
+                  </p>
+                  <textarea
+                    value={config.message || ""}
+                    onChange={(e) => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+                        return { ...prev, message: e.target.value };
+                      });
+                    }}
+                    placeholder="Message..."
+                    className="min-h-24 resize-none rounded-lg border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                  />
+
+                  <input
+                    value={config.title || ""}
+                    onChange={(e) => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+                        return { ...prev, title: e.target.value };
+                      });
+                    }}
+                    placeholder="Title..."
+                    className="rounded-lg border  border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                  />
+
+                  <input
+                    type="color"
+                    value={config.color || "#8b5cf6"}
+                    onChange={(e) => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+                        return { ...prev, color: e.target.value };
+                      });
+                    }}
+                    className="h-10 w-24 cursor-pointer rounded-md border border-grey-700"
+                  />
+
+                  <input
+                    value={config.imageUrl || ""}
+                    onChange={(e) => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+                        return { ...prev, imageUrl: e.target.value };
+                      });
+                    }}
+                    placeholder="Image URL..."
+                    className="rounded-lg border  border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1">
+                  <p className="text-lg font-semibold">Text message</p>
+                  <p className="text-sm text-slate-400 pb-3 ">
+                    Use {"{user}"} to mention user in message
+                  </p>
+                  <textarea
+                    value={config.message || ""}
+                    onChange={(e) => {
+                      setConfig((prev) => {
+                        if (!prev) return undefined;
+                        return { ...prev, message: e.target.value };
+                      });
+                    }}
+                    placeholder="Enter welcome message..."
+                    className="min-h-32  resize-none rounded-lg border border-gray-800 bg-gray-800 p-3 text-white focus:border-violet-500 outline-none"
+                  />
+                </div>
+              )}
             </div>
           </>
         )}
