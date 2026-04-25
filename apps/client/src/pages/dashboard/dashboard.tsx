@@ -98,7 +98,7 @@ const Dashboard = () => {
               toggleSidebar={toggleSidebar}
             />
 
-            <main className="flex-1 p-4 min-h-0 overflow-y-auto rounded-[20px] border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 transition-all duration-300">
+            <main className="relative flex-1 p-4 min-h-0 overflow-y-auto rounded-[20px] border border-white/5 bg-linear-to-b from-blue-950 to-slate-900 transition-all duration-300">
               <Outlet
                 context={
                   {
