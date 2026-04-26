@@ -8,6 +8,6 @@ export class WelcomeMessageEvent {
 
   @On("guildMemberAdd")
   public async onGuildMemberAdd(@Context() [ctx]: ContextOf<"guildMemberAdd">) {
-    console.log(ctx);
+    return this.welcomeService.sendWelcomeMessage(ctx);
   }
 }
