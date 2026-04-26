@@ -15,9 +15,8 @@ import {
   GET_WELCOME_CONFIG_URL,
   UPDATE_WELCOME_CONFIG_URL,
 } from "@/utils/constants";
-import type { WelcomeCfg } from "@astracord/shared";
+import type { UpdateWelcomeCfgDto, WelcomeCfg } from "@astracord/shared";
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -47,7 +46,7 @@ const Welcome = () => {
     if (!guildInfo || !config) return;
     if (!canSubmit()) return;
     try {
-      const payload = {
+      const payload: UpdateWelcomeCfgDto = {
         ...config,
         guildId: guildInfo.id,
       };
@@ -60,6 +59,10 @@ const Welcome = () => {
 
       toast.success("Saved!");
     } catch (error: any) {
+      const status = error.response.status;
+      if (status === 404 || status === 400) {
+        toast.error(error.response.data.message);
+      }
       toast.error("Failed to save data!");
       console.log("Save error:", error.response?.data || error);
     }
