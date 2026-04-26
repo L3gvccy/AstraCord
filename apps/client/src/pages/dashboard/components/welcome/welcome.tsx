@@ -147,7 +147,7 @@ const Welcome = () => {
                     });
                   }}
                 >
-                  <SelectTrigger className="w-full max-w-64 data-placeholder:text-slate-400">
+                  <SelectTrigger className="text-base w-full max-w-64 data-placeholder:text-slate-400 cursor-pointer">
                     <SelectValue placeholder="Select channel" />
                   </SelectTrigger>
 
@@ -162,11 +162,11 @@ const Welcome = () => {
                       <SelectItem
                         key={ch.id}
                         value={ch.id}
-                        className="text-slate-200 focus:bg-slate-900 focus:text-white data-highlighted:bg-slate-900 data-highlighted:text-white data-[state=checked]:bg-violet-700 data-[state=checked]:text-violet-200"
+                        className="text-slate-200 focus:bg-slate-900 focus:text-white data-highlighted:bg-slate-900 data-highlighted:text-white data-[state=checked]:bg-violet-700 data-[state=checked]:text-violet-200 cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
                           <p className="text-lg opacity-65">#</p>
-                          <p className="text-md">{ch.name}</p>
+                          <p className="text-base">{ch.name}</p>
                         </div>
                       </SelectItem>
                     ))}
