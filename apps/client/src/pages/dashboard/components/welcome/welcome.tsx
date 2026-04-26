@@ -11,10 +11,15 @@ import {
 import { Switch } from "@/components/ui/switch";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 import { apiClient } from "@/utils/api-client";
-import { GET_WELCOME_CONFIG_URL } from "@/utils/constants";
+import {
+  GET_WELCOME_CONFIG_URL,
+  UPDATE_WELCOME_CONFIG_URL,
+} from "@/utils/constants";
 import type { WelcomeCfg } from "@astracord/shared";
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 
 const Welcome = () => {
   const { guildInfo, channels, mainRef } =
@@ -24,6 +29,49 @@ const Welcome = () => {
   const [config, setConfig] = useState<WelcomeCfg | undefined>();
   const [initialConfig, setInitialConfig] = useState<WelcomeCfg | undefined>();
   const [cfgChanged, setCfgChanged] = useState(false);
+
+  const canSubmit = () => {
+    if (!config?.channelId) {
+      toast.error("Select a channel first!");
+      return false;
+    }
+
+    if (!config.message?.trim()) {
+      toast.error("Message cannot be empty");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSave = async () => {
+    if (!guildInfo || !config) return;
+    if (!canSubmit()) return;
+    try {
+      const payload = {
+        ...config,
+        guildId: guildInfo.id,
+      };
+
+      const response = await apiClient.post(UPDATE_WELCOME_CONFIG_URL, payload);
+
+      setConfig(response.data);
+      setInitialConfig(response.data);
+      setCfgChanged(false);
+
+      toast.success("Saved!");
+    } catch (error: any) {
+      toast.error("Failed to save data!");
+      console.log("Save error:", error.response?.data || error);
+    }
+  };
+
+  const handleCancel = () => {
+    if (!initialConfig) return;
+
+    setConfig(initialConfig);
+    setCfgChanged(false);
+    toast.success("Canceled!");
+  };
 
   const getWelcomeCfg = async () => {
     if (!guildInfo) return;
@@ -260,8 +308,8 @@ const Welcome = () => {
       {cfgChanged && (
         <SaveChangesPopup
           container={mainRef.current}
-          onCancel={() => {}}
-          onSave={() => {}}
+          onCancel={handleCancel}
+          onSave={handleSave}
         />
       )}
     </>
