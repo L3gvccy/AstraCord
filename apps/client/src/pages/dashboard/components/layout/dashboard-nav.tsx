@@ -19,6 +19,7 @@ import {
   TriangleAlert,
   ArrowLeft,
   PanelLeftClose,
+  ChartLine,
 } from "lucide-react";
 import DashboardNavItem from "./dashboard-nav-item";
 import type { GuildType } from "@astracord/shared";
@@ -63,6 +64,11 @@ const DashboardNav = ({
             title: "Reaction Roles",
             href: `/dashboard/${guildId}/reaction-roles`,
             icon: Award,
+          },
+          {
+            title: "Server Stats",
+            href: `/dashboard/${guildId}/server-stats`,
+            icon: ChartLine,
           },
           { title: "Embeds", href: `/dashboard/${guildId}/embeds`, icon: Code },
           {
