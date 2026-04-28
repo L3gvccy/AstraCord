@@ -41,6 +41,9 @@ model WelcomeMessageCfg {
   color         String? @default("#9b59b6")
   displayAvatar Boolean @default(false)
   imageUrl      String?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt @default(now())
 }
 
 model jtcConfig {
@@ -49,6 +52,9 @@ model jtcConfig {
   isEnabled Boolean @default(false)
 
   channels jtcChannel[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model jtcChannel {
@@ -60,4 +66,7 @@ model jtcChannel {
   userLimit   Int     @default(0)
 
   config jtcConfig @relation(fields: [guildId], references: [guildId])
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }

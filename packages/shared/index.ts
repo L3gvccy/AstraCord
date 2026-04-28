@@ -1,6 +1,7 @@
 // Dto export
 export * from "./dto/guildsdto";
 export * from "./dto/welcome.dto";
+export * from "./dto/jtc.dto";
 // Types export
 export * from "./types/discord-user";
 export * from "./types/welcome";
