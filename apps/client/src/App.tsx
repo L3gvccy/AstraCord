@@ -13,6 +13,7 @@ import LoginRedirect from "./pages/auth/login-redirect";
 import Dashboard from "./pages/dashboard/dashboard";
 import Welcome from "./pages/dashboard/components/welcome/welcome";
 import DashboardIndex from "./pages/dashboard/components/index/dashboard-index";
+import JoinToCreate from "./pages/dashboard/components/joinToCreate/join-to-create";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.userReducer.user);
@@ -87,6 +88,7 @@ function App() {
         >
           <Route index element={<DashboardIndex />} />
           <Route path="welcome" element={<Welcome />} />
+          <Route path="join-to-create" element={<JoinToCreate />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
