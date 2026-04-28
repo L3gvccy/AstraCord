@@ -3,6 +3,7 @@ import { Switch } from "@/components/ui/switch";
 import type { jtcConfig } from "@astracord/shared";
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
+import JtcChannel from "./components/jtc-channel";
 
 const JoinToCreate = () => {
   const [config, setConfig] = useState<jtcConfig>();
@@ -38,7 +39,7 @@ const JoinToCreate = () => {
           {/* Channels count, add btn */}
 
           <p className="flex-lg text-white/85">
-            channels: {config?.channels?.length || 0}
+            Channels count: {config?.channels?.length || 0}/5
           </p>
           <button className=" flex items-center w-fit gap-3 px-4 py-2  bg-violet-600 rounded-lg hover:bg-violet-500 transition cursor-pointer">
             <Plus size={22} />
@@ -48,24 +49,13 @@ const JoinToCreate = () => {
 
         {/* Add content here (map channels) */}
 
-        <div className="flex flex-col gap-3">
-          {config?.channels?.map((channel, index) => (
-            <div
-              key={channel.id}
-              className="flex flex-col gap-3 rounded-lg p-4"
-            >
-              <div className="flex items-center justify-between">
-                <p className="flex-lg font-semibold text-white">
-                  channel #{index + 1}
-                </p>
-
-                <button className="text-sm text-red-500 hover:text-red-300 transition">
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        {config?.channels && config?.channels?.length > 0 && (
+          <div className="flex flex-col gap-3">
+            {config?.channels?.map((channel, index) => (
+              <JtcChannel index={index} channel={channel} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
