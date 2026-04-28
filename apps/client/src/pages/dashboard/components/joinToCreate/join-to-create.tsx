@@ -1,6 +1,7 @@
 import { DashboardOutletHeader } from "@/components/dashboard-outlet-header";
 import { Switch } from "@/components/ui/switch";
 import type { jtcConfig } from "@astracord/shared";
+import { Plus } from "lucide-react";
 import React, { useState } from "react";
 
 const JoinToCreate = () => {
@@ -21,7 +22,7 @@ const JoinToCreate = () => {
 
         <div className="flex flex-col gap-4 p-4 rounded-lg bg-slate-900">
           <div className="flex gap-6 items-center">
-            <p className="text-xl font-semibold">Welcome message enabled</p>
+            <p className="text-xl font-semibold">Join To Create enabled</p>
             <Switch
               checked={config?.isEnabled}
               onCheckedChange={() => {
@@ -35,9 +36,36 @@ const JoinToCreate = () => {
           </div>
 
           {/* Channels count, add btn */}
+
+          <p className="flex-lg text-white/85">
+            channels: {config?.channels?.length || 0}
+          </p>
+          <button className=" flex items-center w-fit gap-3 px-4 py-2  bg-violet-600 rounded-lg hover:bg-violet-500 transition cursor-pointer">
+            <Plus size={22} />
+            <p>Add new channel</p>
+          </button>
         </div>
 
         {/* Add content here (map channels) */}
+
+        <div className="flex flex-col gap-3">
+          {config?.channels?.map((channel, index) => (
+            <div
+              key={channel.id}
+              className="flex flex-col gap-3 rounded-lg p-4"
+            >
+              <div className="flex items-center justify-between">
+                <p className="flex-lg font-semibold text-white">
+                  channel #{index + 1}
+                </p>
+
+                <button className="text-sm text-red-500 hover:text-red-300 transition">
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
