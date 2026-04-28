@@ -54,10 +54,10 @@ model jtcConfig {
 model jtcChannel {
   id          String  @id @default(uuid())
   guildId     String
-  channelId   String
-  categoryId  String
+  channelId   String?
+  categoryId  String?
   channelName String  @default("{username}'s channel")
   userLimit   Int     @default(0)
 
-  config jtcConfig @relation(fields: [guildId], references: [id])
+  config jtcConfig @relation(fields: [guildId], references: [guildId])
 }
