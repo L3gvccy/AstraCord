@@ -33,9 +33,11 @@ const JoinToCreate = () => {
               }}
             />
           </div>
+
+          {/* Channels count, add btn */}
         </div>
 
-        {/* Add content here */}
+        {/* Add content here (map channels) */}
       </div>
     </>
   );
