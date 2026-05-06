@@ -5,7 +5,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { channel } from "diagnostics_channel";
 
 @Injectable()
 export class JtcService {
@@ -34,16 +33,20 @@ export class JtcService {
     }
 
     // Delete removed channels from database
-    existingConfig.channels.forEach(async (cfgChannel) => {
-      if (!dto.channels.some((channel) => channel.id === cfgChannel.id)) {
-        this.deleteChannel(cfgChannel.id);
+    for (const cfgChannel of existingConfig.channels) {
+      const existsInDto = dto.channels.some(
+        (channel) => channel.id === cfgChannel.id,
+      );
+
+      if (!existsInDto) {
+        await this.deleteChannel(cfgChannel.id);
       }
-    });
+    }
 
     // Update or create channels
-    dto.channels.forEach(async (channel) => {
+    for (const channel of dto.channels) {
       await this.updateOrCreateChannel(channel, dto.guildId);
-    });
+    }
 
     const updatedConfig = await this.prisma.jtcConfig.update({
       where: { guildId: dto.guildId },
@@ -75,14 +78,17 @@ export class JtcService {
       !channel.categoryId ||
       !channel.channelId ||
       !channel.channelName ||
-      !channel.userLimit
+      channel.userLimit === undefined ||
+      channel.userLimit === null
     ) {
       throw new BadRequestException(`Please fill all fields`);
     }
 
-    const existingChannel = await this.prisma.jtcChannel.findUnique({
-      where: { id: channel?.id },
-    });
+    const existingChannel = channel.id
+      ? await this.prisma.jtcChannel.findUnique({
+          where: { id: channel.id },
+        })
+      : null;
     if (!existingChannel) {
       await this.prisma.jtcChannel.create({
         data: {

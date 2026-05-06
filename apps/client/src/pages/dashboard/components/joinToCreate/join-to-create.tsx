@@ -1,6 +1,11 @@
 import { DashboardOutletHeader } from "@/components/dashboard-outlet-header";
 import { Switch } from "@/components/ui/switch";
-import type { jtcChannel, jtcConfig, jtcConfigDto } from "@astracord/shared";
+import {
+  type ChannelType,
+  type jtcChannel,
+  type jtcConfig,
+  type jtcConfigDto,
+} from "@astracord/shared";
 import { Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import JtcChannel from "./components/jtc-channel";
@@ -18,6 +23,7 @@ const JoinToCreate = () => {
     mainRef,
   } = useOutletContext<DashboardOutletContext>();
   const voiceChannels = allChannels?.filter((channel) => channel.type === 2);
+
   const categories = allChannels?.filter((channel) => channel.type === 4);
   const [config, setConfig] = useState<jtcConfig>();
   const [initialConfig, setInitialConfig] = useState<jtcConfig>();
@@ -43,15 +49,15 @@ const JoinToCreate = () => {
   }, []);
 
   useEffect(() => {
-    console.log(JSON.stringify(config));
-    console.log(JSON.stringify(initialConfig));
-  }, [config]);
-
-  useEffect(() => {
     if (!config || !initialConfig) return;
 
     setCfgChanged(JSON.stringify(config) !== JSON.stringify(initialConfig));
   }, [config, initialConfig]);
+
+  useEffect(() => {
+    if (!config) return;
+    console.log(config);
+  }, [config]);
 
   const handleAddChannel = () => {
     if (!guildInfo || !config) return;
@@ -73,6 +79,18 @@ const JoinToCreate = () => {
     });
   };
 
+  const handleChangeChannel = (channel: jtcChannel, index: number) => {
+    setConfig((prev) => {
+      if (!prev) return undefined;
+      return {
+        ...prev,
+        channels: prev.channels.map((prevChannel, i) =>
+          i === index ? channel : prevChannel,
+        ),
+      };
+    });
+  };
+
   const handleRemoveChannel = (index: number) => {
     if (!guildInfo || !config) return;
 
@@ -83,6 +101,23 @@ const JoinToCreate = () => {
   };
 
   const canSubmit = () => {
+    if (config?.channels.some((channel) => !channel.categoryId)) {
+      toast.error("Not every channel has category selected");
+      return false;
+    }
+    if (config?.channels.some((channel) => !channel.channelName)) {
+      toast.error("Not every channel has name");
+      return false;
+    }
+    if (config?.channels.some((channel) => channel.userLimit == null)) {
+      toast.error("Not every channel has user limits");
+      return false;
+    }
+    if (config?.channels.some((channel) => !channel.channelId)) {
+      toast.error("Not every channel has channel selected");
+      return false;
+    }
+
     return true;
   };
 
@@ -123,6 +158,9 @@ const JoinToCreate = () => {
       setSaving(false);
     }
   };
+
+  if (loading || !config || !voiceChannels || !categories)
+    return <div>Loading...</div>;
 
   return (
     <>
@@ -174,13 +212,26 @@ const JoinToCreate = () => {
           config?.channels &&
           config?.channels?.length > 0 && (
             <div className="flex flex-col gap-3">
-              {config?.channels?.map((channel, index) => (
-                <JtcChannel
-                  index={index}
-                  channel={channel}
-                  onRemove={handleRemoveChannel}
-                />
-              ))}
+              {config?.channels?.map((channel, index) => {
+                const avaliableVoiceChannels = voiceChannels.filter(
+                  (vc) =>
+                    vc.id === channel.channelId ||
+                    !config.channels.some(
+                      (cfgChannel, cfgIndex) =>
+                        cfgIndex !== index && cfgChannel.channelId === vc.id,
+                    ),
+                );
+                return (
+                  <JtcChannel
+                    index={index}
+                    channel={channel}
+                    voiceChannels={avaliableVoiceChannels}
+                    categories={categories}
+                    onChange={handleChangeChannel}
+                    onRemove={handleRemoveChannel}
+                  />
+                );
+              })}
             </div>
           )}
       </div>
