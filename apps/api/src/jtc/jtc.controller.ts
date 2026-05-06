@@ -26,16 +26,4 @@ export class JtcController {
   async updateConfig(@Body() dto: jtcConfigDto) {
     return await this.jtcService.updateConfig(dto);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Post("add-channel/:guildId")
-  async addChannel(@Param("guildId") guildId: string) {
-    return await this.jtcService.addChannel(guildId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete("delete-channel/:id")
-  async deleteChannel(@Param("id") id: string) {
-    return await this.jtcService.deleteChannel(id);
-  }
 }

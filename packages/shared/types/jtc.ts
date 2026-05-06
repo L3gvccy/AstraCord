@@ -7,7 +7,7 @@ export type jtcConfig = {
 };
 
 export type jtcChannel = {
-  id: string;
+  id?: string;
   guildId: string;
   channelId?: string | null;
   categoryId?: string | null;

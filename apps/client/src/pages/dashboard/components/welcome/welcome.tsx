@@ -27,6 +27,7 @@ const Welcome = () => {
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<WelcomeCfg | undefined>();
   const [initialConfig, setInitialConfig] = useState<WelcomeCfg | undefined>();
+  const [saving, setSaving] = useState(false);
   const [cfgChanged, setCfgChanged] = useState(false);
 
   const canSubmit = () => {
@@ -46,6 +47,7 @@ const Welcome = () => {
     if (!guildInfo || !config) return;
     if (!canSubmit()) return;
     try {
+      setSaving(true);
       const payload: UpdateWelcomeCfgDto = {
         ...config,
         guildId: guildInfo.id,
@@ -59,12 +61,15 @@ const Welcome = () => {
 
       toast.success("Saved!");
     } catch (error: any) {
+      console.log("Save error:", error.response?.data || error);
       const status = error.response.status;
       if (status === 404 || status === 400) {
         toast.error(error.response.data.message);
+        return;
       }
       toast.error("Failed to save data!");
-      console.log("Save error:", error.response?.data || error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -313,6 +318,7 @@ const Welcome = () => {
           container={mainRef.current}
           onCancel={handleCancel}
           onSave={handleSave}
+          isLoading={saving}
         />
       )}
     </>

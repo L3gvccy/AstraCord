@@ -23,7 +23,3 @@ export const UPDATE_WELCOME_CONFIG_URL = `${WELCOME_URL}/update-config`;
 export const JTC_URL = `${API_URL}/jtc`;
 export const GET_JTC_CONFIG_URL = (guildId: string) => `${JTC_URL}/${guildId}`;
 export const UPDATE_JTC_CONFIG_URL = `${JTC_URL}/update-cfg`;
-export const ADD_JTC_CHANNEL_URL = (guildId: string) =>
-  `${JTC_URL}/add-channel/${guildId}`;
-export const DELETE_JTC_CHANNEL_URL = (id: string) =>
-  `${JTC_URL}/delete-channel/${id}`;

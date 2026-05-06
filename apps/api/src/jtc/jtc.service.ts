@@ -5,6 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { channel } from "diagnostics_channel";
 
 @Injectable()
 export class JtcService {
@@ -32,8 +33,16 @@ export class JtcService {
       throw new NotFoundException("Config not found");
     }
 
+    // Delete removed channels from database
+    existingConfig.channels.forEach(async (cfgChannel) => {
+      if (!dto.channels.some((channel) => channel.id === cfgChannel.id)) {
+        this.deleteChannel(cfgChannel.id);
+      }
+    });
+
+    // Update or create channels
     dto.channels.forEach(async (channel) => {
-      await this.updateChannel(channel);
+      await this.updateOrCreateChannel(channel, dto.guildId);
     });
 
     const updatedConfig = await this.prisma.jtcConfig.update({
@@ -61,7 +70,7 @@ export class JtcService {
     return await this.getOrCreateConfig(deletedChannel.guildId);
   }
 
-  async updateChannel(channel: jtcChannel) {
+  async updateOrCreateChannel(channel: jtcChannel, guildId: string) {
     if (
       !channel.categoryId ||
       !channel.channelId ||
@@ -70,14 +79,30 @@ export class JtcService {
     ) {
       throw new BadRequestException(`Please fill all fields`);
     }
-    await this.prisma.jtcChannel.update({
-      where: { id: channel.id },
-      data: {
-        channelId: channel.channelId,
-        categoryId: channel.categoryId,
-        channelName: channel.channelName,
-        userLimit: channel.userLimit,
-      },
+
+    const existingChannel = await this.prisma.jtcChannel.findUnique({
+      where: { id: channel?.id },
     });
+    if (!existingChannel) {
+      await this.prisma.jtcChannel.create({
+        data: {
+          guildId,
+          channelId: channel.channelId,
+          categoryId: channel.categoryId,
+          channelName: channel.channelName,
+          userLimit: channel.userLimit,
+        },
+      });
+    } else {
+      await this.prisma.jtcChannel.update({
+        where: { id: channel.id },
+        data: {
+          channelId: channel.channelId,
+          categoryId: channel.categoryId,
+          channelName: channel.channelName,
+          userLimit: channel.userLimit,
+        },
+      });
+    }
   }
 }
