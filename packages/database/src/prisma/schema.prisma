@@ -8,6 +8,14 @@ datasource db {
   provider = "postgresql"
 }
 
+enum CounterType{
+TOTAL_USERS
+USERS_ACTIVE
+USERS_VOICE
+BOTS
+HUMANS
+}
+
 model User {
   id            String    @id
   username      String
@@ -66,6 +74,30 @@ model jtcChannel {
   userLimit   Int     @default(0)
 
   config jtcConfig @relation(fields: [guildId], references: [guildId])
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ServerStatsConfig{
+  id String @id @default(uuid())
+  guildId String @unique
+  isEnabled Boolean @default(false)
+
+  counters ServerStatsCounter[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ServerStatsCounter{
+  id String @id @default(uuid())
+  guildId String @unique
+  channelId String
+  type CounterType
+  text String
+
+  config ServerStatsConfig @relation(fields: [guildId], references: [guildId])
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
