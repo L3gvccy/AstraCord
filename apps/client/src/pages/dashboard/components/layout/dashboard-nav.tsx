@@ -20,6 +20,8 @@ import {
   ArrowLeft,
   PanelLeftClose,
   ChartLine,
+  Archive,
+  Ticket,
 } from "lucide-react";
 import DashboardNavItem from "./dashboard-nav-item";
 import type { GuildType } from "@astracord/shared";
@@ -71,11 +73,11 @@ const DashboardNav = ({
             icon: ChartLine,
           },
           { title: "Embeds", href: `/dashboard/${guildId}/embeds`, icon: Code },
-          {
-            title: "Ongoing Polls",
-            href: `/dashboard/${guildId}/polls/ongoing`,
-            icon: Vote,
-          },
+          // {
+          //   title: "Ongoing Polls",
+          //   href: `/dashboard/${guildId}/polls/ongoing`,
+          //   icon: Vote,
+          // },
           {
             title: "Create Poll",
             href: `/dashboard/${guildId}/polls/create`,
@@ -88,6 +90,11 @@ const DashboardNav = ({
         icon: CircleHelp,
         items: [
           {
+            title: "SetUp Tickets",
+            href: `/dashboard/${guildId}/setup-tickets`,
+            icon: Ticket,
+          },
+          {
             title: "Active Tickets",
             href: `/dashboard/${guildId}/tickets/active`,
             icon: NotebookPen,
@@ -95,12 +102,7 @@ const DashboardNav = ({
           {
             title: "Archived Tickets",
             href: `/dashboard/${guildId}/tickets/archived`,
-            icon: NotebookPen,
-          },
-          {
-            title: "SetUp Tickets",
-            href: `/dashboard/${guildId}/setup-tickets`,
-            icon: CircleHelp,
+            icon: Archive,
           },
         ],
       },
