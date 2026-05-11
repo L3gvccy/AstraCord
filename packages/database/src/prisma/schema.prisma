@@ -92,10 +92,10 @@ model ServerStatsConfig{
 
 model ServerStatsCounter{
   id String @id @default(uuid())
-  guildId String @unique
-  channelId String
-  type CounterType
-  text String
+  guildId String 
+  channelId String?
+  type CounterType?
+  text String?
 
   config ServerStatsConfig @relation(fields: [guildId], references: [guildId])
 

@@ -57,14 +57,6 @@ export class JtcService {
     return updatedConfig;
   }
 
-  async addChannel(guildId: string) {
-    await this.prisma.jtcChannel.create({
-      data: { guildId },
-    });
-
-    return await this.getOrCreateConfig(guildId);
-  }
-
   async deleteChannel(id: string) {
     const deletedChannel = await this.prisma.jtcChannel.delete({
       where: { id },
