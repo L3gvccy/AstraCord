@@ -95,14 +95,9 @@ const DashboardNav = ({
             icon: Ticket,
           },
           {
-            title: "Active Tickets",
-            href: `/dashboard/${guildId}/tickets/active`,
+            title: "Tickets List",
+            href: `/dashboard/${guildId}/tickets`,
             icon: NotebookPen,
-          },
-          {
-            title: "Archived Tickets",
-            href: `/dashboard/${guildId}/tickets/archived`,
-            icon: Archive,
           },
         ],
       },
