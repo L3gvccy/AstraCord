@@ -90,7 +90,7 @@ model ServerStatsConfig{
   updatedAt     DateTime  @updatedAt
 }
 
-model ServerStatsCounter{
+model ServerStatsCounter {
   id String @id @default(uuid())
   guildId String 
   channelId String?
@@ -98,6 +98,73 @@ model ServerStatsCounter{
   text String?
 
   config ServerStatsConfig @relation(fields: [guildId], references: [guildId])
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model TicketConfig {
+  id String @id @default(uuid())
+  guildId String @unique
+  isEnabled Boolean @default(false)
+
+  // Panel embed
+  title String @default("Ticket system")
+  description String @default("Select an option which fits your problem the most. The ticket will be created automatically.")
+  color String @default("#9b59b6")
+  thumbnailImageUrl String?
+  imageUrl String?
+
+  // Panel location
+  channelId String?
+  messageId String?
+
+  // Category for created tickets
+  categoryId String?
+
+  options TicketOption[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model TicketOption {
+  id String @id @default(uuid())
+  ticketConfigId String
+  guildId String
+
+  position Int
+
+  // Select option
+  optionEmoji String
+  optionText String
+  optionDescription String
+
+  // In-ticket message/embed
+  isEmbed Boolean @default(true)
+
+  title String @default("Ticket opened")
+  message String @default("Please describe your situation below")
+  color String @default("#9b59b6")
+  thumbnailImageUrl String?
+  imageUrl String?
+
+  options TicketOptionRole[]
+
+  ticketConfig TicketConfig @relation(fields: [ticketConfigId], references: [guildId], onDelete: Cascade)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model TicketOptionRole {
+  id String @id
+  ticketOptionId String
+  roleId String
+
+  ticketOption TicketOption @relation(fields: [ticketOptionId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketOptionId, roleId])
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
