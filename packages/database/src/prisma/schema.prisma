@@ -138,7 +138,7 @@ model TicketOption {
   // Select option
   optionEmoji String
   optionText String
-  optionDescription String
+  optionDescription String?
 
   // In-ticket message/embed
   isEmbed Boolean @default(true)
@@ -149,7 +149,7 @@ model TicketOption {
   thumbnailImageUrl String?
   imageUrl String?
 
-  options TicketOptionRole[]
+  roles TicketOptionRole[]
 
   ticketConfig TicketConfig @relation(fields: [ticketConfigId], references: [guildId], onDelete: Cascade)
 
