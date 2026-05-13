@@ -23,11 +23,10 @@ const JoinToCreate = () => {
     mainRef,
   } = useOutletContext<DashboardOutletContext>();
   const voiceChannels = allChannels?.filter((channel) => channel.type === 2);
-
   const categories = allChannels?.filter((channel) => channel.type === 4);
   const [config, setConfig] = useState<jtcConfig>();
   const [initialConfig, setInitialConfig] = useState<jtcConfig>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [cfgChanged, setCfgChanged] = useState(false);
   const getJtcCfg = async () => {
@@ -54,6 +53,7 @@ const JoinToCreate = () => {
     setCfgChanged(JSON.stringify(config) !== JSON.stringify(initialConfig));
   }, [config, initialConfig]);
 
+  //delete nahuy
   useEffect(() => {
     if (!config) return;
     console.log(config);
@@ -193,7 +193,7 @@ const JoinToCreate = () => {
             <>
               {/* Channels count, add btn */}
 
-              <p className="flex-lg text-white/85">
+              <p className=" text-white/85">
                 Channels count: {config?.channels?.length || 0}/5
               </p>
               <button

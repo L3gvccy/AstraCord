@@ -14,7 +14,7 @@ export type serverStatsConfig = {
 };
 
 export type serverStatsCounter = {
-  id: string;
+  id?: string;
   guildId: string;
   channelId?: string | null;
   text?: string | null;

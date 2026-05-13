@@ -1,0 +1,129 @@
+import { DashboardOutletHeader } from "@/components/dashboard-outlet-header";
+import { Switch } from "@/components/ui/switch";
+import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
+import { apiClient } from "@/utils/api-client";
+import { GET_SERVER_STATS_CONFIG_URL } from "@/utils/constants";
+import { COUNTER_TYPES } from "@/utils/tools";
+import type { serverStatsConfig, serverStatsCounter } from "@astracord/shared";
+import { Plus, Underline } from "lucide-react";
+import React, { use, useEffect, useEffectEvent, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
+
+const ServerStats = () => {
+  const {
+    guildInfo,
+    channels: allChannels,
+    mainRef,
+  } = useOutletContext<DashboardOutletContext>();
+  const voiceChannels = allChannels?.filter((channel) => channel.type === 2);
+  const [config, setConfig] = useState<serverStatsConfig>();
+  const [initialConfig, setInitialConfig] = useState<serverStatsConfig>();
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [cfgChanged, setCfgChanged] = useState(false);
+  const unusedTypes = COUNTER_TYPES.filter(
+    (type) => !config?.counters.some((counter) => counter.type === type),
+  );
+  const getServerStatsCfg = async () => {
+    if (!guildInfo) return;
+
+    try {
+      const res = await apiClient.get(
+        GET_SERVER_STATS_CONFIG_URL(guildInfo.id),
+      );
+      setConfig(res.data);
+      setInitialConfig(res.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getServerStatsCfg();
+  }, []);
+
+  useEffect(() => {
+    if (!config || !initialConfig) return;
+
+    setCfgChanged(JSON.stringify(config) !== JSON.stringify(initialConfig));
+  }, [config, initialConfig]);
+
+  //delete nahuy
+  useEffect(() => {
+    if (!config) return;
+    console.log(config);
+  }, [config]);
+
+  const handleAddCounter = () => {
+    if (!guildInfo || !config) return;
+
+    if (unusedTypes.length === 0) {
+      toast.error("No more available counter types");
+      return;
+    }
+
+    const newCounter: serverStatsCounter = {
+      guildId: guildInfo.id,
+      text: "Counter: {count}",
+      type: unusedTypes[0],
+    };
+
+    setConfig((prev) => {
+      if (!prev) return undefined;
+
+      return { ...prev, counters: [...prev.counters, newCounter] };
+    });
+  };
+
+  if (loading || !config || !voiceChannels) return <div>Loading...</div>;
+  return (
+    <>
+      <div className="flex flex-col w-full gap-4">
+        <DashboardOutletHeader>
+          <DashboardOutletHeader.Title>
+            Server Stats
+          </DashboardOutletHeader.Title>
+          <DashboardOutletHeader.Description>
+            Manage your server stats
+          </DashboardOutletHeader.Description>
+        </DashboardOutletHeader>
+
+        <div className="flex flex-col gap-4 p-4 rounder-lg bg-slate-900">
+          <div className="flex gap-6 items-center">
+            <p className="text-xl font-semibold">
+              Server Stats Tracker Enabled
+            </p>
+            <Switch
+              checked={config?.isEnabled}
+              onCheckedChange={() => {
+                setConfig((prev) => {
+                  if (!prev) return undefined;
+                  return { ...prev, isEnabled: !prev.isEnabled };
+                });
+              }}
+            />
+          </div>
+          {config?.isEnabled && (
+            <>
+              <p className=" text-white/85">
+                Active counters: {config?.counters?.length}
+              </p>
+              <button
+                className=" flex items-center w-fit gap-3 px-4 py-2  bg-violet-600 rounded-lg hover:bg-violet-500 transition cursor-pointer"
+                onClick={handleAddCounter}
+              >
+                <Plus size={22} />
+                <p>Add new channel</p>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ServerStats;

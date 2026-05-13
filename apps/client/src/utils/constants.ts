@@ -23,3 +23,8 @@ export const UPDATE_WELCOME_CONFIG_URL = `${WELCOME_URL}/update-config`;
 export const JTC_URL = `${API_URL}/jtc`;
 export const GET_JTC_CONFIG_URL = (guildId: string) => `${JTC_URL}/${guildId}`;
 export const UPDATE_JTC_CONFIG_URL = `${JTC_URL}/update-cfg`;
+
+export const SERVER_STATS_URL = `${API_URL}/server-stats`;
+export const GET_SERVER_STATS_CONFIG_URL = (guildId: string) =>
+  `${SERVER_STATS_URL}/${guildId}`;
+export const UPDATE_SERVER_STATS_CONFIG_URL = `${SERVER_STATS_URL}/update-cfg`;
