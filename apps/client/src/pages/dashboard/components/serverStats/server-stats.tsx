@@ -9,6 +9,8 @@ import { Plus, Underline } from "lucide-react";
 import React, { use, useEffect, useEffectEvent, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
+import ServerStatsCounter from "./components/server-stats-counter";
+import SaveChangesPopup from "@/components/save-changes-popup";
 
 const ServerStats = () => {
   const {
@@ -78,6 +80,27 @@ const ServerStats = () => {
     });
   };
 
+  const handleChangeCounter = (counter: serverStatsCounter, index: number) => {
+    setConfig((prev) => {
+      if (!prev) return undefined;
+      return {
+        ...prev,
+        counters: prev.counters.map((prevCounter, i) =>
+          i === index ? counter : prevCounter,
+        ),
+      };
+    });
+  };
+
+  const handleRemoveCounter = (index: number) => {
+    if (!guildInfo || !config) return;
+
+    setConfig((prev) => {
+      if (!prev) return undefined;
+      return { ...prev, counters: prev.counters.filter((_, i) => i !== index) };
+    });
+  };
+
   if (loading || !config || !voiceChannels) return <div>Loading...</div>;
   return (
     <>
@@ -121,7 +144,47 @@ const ServerStats = () => {
             </>
           )}
         </div>
+        {config?.isEnabled &&
+          config?.counters &&
+          config?.counters.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {config.counters.map((counter, index) => {
+                const avaliableVoiceChannels = voiceChannels.filter(
+                  (vc) =>
+                    vc.id === counter.channelId ||
+                    !config.counters.some(
+                      (cfgCounter, cfgIndex) =>
+                        cfgIndex !== index && cfgCounter.channelId === vc.id,
+                    ),
+                );
+
+                const availableTypes = counter.type
+                  ? [...unusedTypes, counter.type]
+                  : unusedTypes;
+
+                return (
+                  <ServerStatsCounter
+                    key={counter.id}
+                    index={index}
+                    types={availableTypes}
+                    counter={counter}
+                    voiceChannels={avaliableVoiceChannels}
+                    onChange={handleChangeCounter}
+                    onRemove={handleRemoveCounter}
+                  />
+                );
+              })}
+            </div>
+          )}
       </div>
+      {cfgChanged && (
+        <SaveChangesPopup
+          container={mainRef.current}
+          onCancel={() => {}}
+          onSave={() => {}}
+          isLoading={saving}
+        />
+      )}
     </>
   );
 };
