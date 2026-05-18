@@ -5,7 +5,7 @@ import AuthCallback from "./pages/auth/callback";
 import { useEffect, useState, type ReactNode } from "react";
 import AstraLoader from "./components/loader";
 import { apiClient } from "./utils/api-client";
-import { DISCORD_AUTH_URL, GET_ME_URL } from "./utils/constants";
+import { GET_ME_URL } from "./utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./store/userSlice";
 import type { RootState } from "./store/store";
@@ -15,6 +15,7 @@ import Welcome from "./pages/dashboard/components/welcome/welcome";
 import DashboardIndex from "./pages/dashboard/components/index/dashboard-index";
 import JoinToCreate from "./pages/dashboard/components/joinToCreate/join-to-create";
 import ServerStats from "./pages/dashboard/components/serverStats/server-stats";
+import SetupTickets from "./pages/dashboard/components/tickets/setup-tickets";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.userReducer.user);
@@ -91,6 +92,7 @@ function App() {
           <Route path="welcome" element={<Welcome />} />
           <Route path="join-to-create" element={<JoinToCreate />} />
           <Route path="server-stats" element={<ServerStats />} />
+          <Route path="setup-tickets" element={<SetupTickets />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

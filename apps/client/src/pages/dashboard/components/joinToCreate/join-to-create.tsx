@@ -7,7 +7,7 @@ import {
   type jtcConfigDto,
 } from "@astracord/shared";
 import { Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import JtcChannel from "./components/jtc-channel";
 import { useOutletContext } from "react-router-dom";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";

@@ -28,3 +28,8 @@ export const SERVER_STATS_URL = `${API_URL}/server-stats`;
 export const GET_SERVER_STATS_CONFIG_URL = (guildId: string) =>
   `${SERVER_STATS_URL}/${guildId}`;
 export const UPDATE_SERVER_STATS_CONFIG_URL = `${SERVER_STATS_URL}/update-cfg`;
+
+export const TICKETS_URL = `${API_URL}/tickets`;
+export const GET_TICKETS_CONFIG_URL = (guildId: string) =>
+  `${TICKETS_URL}/${guildId}`;
+export const UPDATE_TICKETS_CONFIG_URL = `${TICKETS_URL}/update-cfg`;
