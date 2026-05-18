@@ -4,7 +4,7 @@ export interface TicketConfigDto {
   id: string;
   guildId: string;
   isEnabled: boolean;
-  title: string;
+  title?: string;
   description: string;
   color: string;
   thumbnailImageUrl?: string | null;
@@ -14,7 +14,7 @@ export interface TicketConfigDto {
 
   categoryId?: string | null;
 
-  options?: TicketOption[];
+  options: TicketOption[];
 
   createdAt?: Date;
   updatedAt?: Date;

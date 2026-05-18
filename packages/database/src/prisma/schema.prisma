@@ -143,7 +143,7 @@ model TicketOption {
   // In-ticket message/embed
   isEmbed Boolean @default(true)
 
-  title String @default("Ticket opened")
+  title String? @default("Ticket opened")
   message String @default("Please describe your situation below")
   color String @default("#9b59b6")
   thumbnailImageUrl String?
@@ -158,7 +158,7 @@ model TicketOption {
 }
 
 model TicketOptionRole {
-  id String @id
+  id String @id @default(uuid())
   ticketOptionId String
   roleId String
 

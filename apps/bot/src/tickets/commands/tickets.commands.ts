@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { TicketsService } from "../tickets.service";
 import { Context, SlashCommand, SlashCommandContext } from "necord";
+import { PermissionFlagsBits } from "discord.js";
 
 @Injectable()
 export class TicketsCommands {
   constructor(private ticketsService: TicketsService) {}
 
   @SlashCommand({
-    name: "set-tickets",
+    name: "set-tickets-message",
     description: "Send tickets embed message",
+    defaultMemberPermissions: PermissionFlagsBits.Administrator,
   })
   async onSetTickets(@Context() interaction: SlashCommandContext[0]) {}
 }

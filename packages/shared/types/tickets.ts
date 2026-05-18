@@ -19,9 +19,9 @@ export type TicketConfig = {
 };
 
 export type TicketOption = {
-  id?: string | null;
-  ticketConfigId: string;
-  guildId: string;
+  id?: string | undefined;
+  ticketConfigId?: string;
+  guildId?: string;
 
   position: number;
 
@@ -31,7 +31,7 @@ export type TicketOption = {
 
   isEmbed: boolean;
 
-  title: string;
+  title?: string;
   message: string;
   color: string;
   thumbnailImageUrl?: string | null;
