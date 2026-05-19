@@ -17,6 +17,7 @@ import { TicketsModule } from "./tickets/tickets.module";
       token: process.env.DISCORD_BOT_TOKEN ?? "",
       intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildModeration,
         GatewayIntentBits.GuildMessages,
