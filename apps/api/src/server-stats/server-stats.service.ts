@@ -64,18 +64,23 @@ export class ServerStatsService {
   }
 
   async updateOrCreateCounter(guildId: string, counter: serverStatsCounter) {
-    if (!counter.channelId || !counter.type || !counter.text) {
-      throw new BadRequestException(`Please fill all fields`);
+    if (!counter.channelId || !counter.type || !counter.text?.trim()) {
+      throw new BadRequestException("Please fill all fields");
     }
 
-    await this.prisma.serverStatsCounter.upsert({
-      where: { id: counter.id },
-      update: {
-        channelId: counter.channelId,
-        type: counter.type,
-        text: counter.text,
-      },
-      create: {
+    if (counter.id) {
+      return this.prisma.serverStatsCounter.update({
+        where: { id: counter.id },
+        data: {
+          channelId: counter.channelId,
+          type: counter.type,
+          text: counter.text,
+        },
+      });
+    }
+
+    return this.prisma.serverStatsCounter.create({
+      data: {
         guildId,
         channelId: counter.channelId,
         type: counter.type,

@@ -2,9 +2,16 @@ import { DashboardOutletHeader } from "@/components/dashboard-outlet-header";
 import { Switch } from "@/components/ui/switch";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 import { apiClient } from "@/utils/api-client";
-import { GET_SERVER_STATS_CONFIG_URL } from "@/utils/constants";
+import {
+  GET_SERVER_STATS_CONFIG_URL,
+  UPDATE_SERVER_STATS_CONFIG_URL,
+} from "@/utils/constants";
 import { COUNTER_TYPES } from "@/utils/tools";
-import type { serverStatsConfig, serverStatsCounter } from "@astracord/shared";
+import type {
+  serverStatsConfig,
+  serverStatsConfigDto,
+  serverStatsCounter,
+} from "@astracord/shared";
 import { Plus, Underline } from "lucide-react";
 import React, { use, useEffect, useEffectEvent, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -101,6 +108,65 @@ const ServerStats = () => {
     });
   };
 
+  const canSubmit = () => {
+    if (config?.counters.some((counter) => !counter.channelId)) {
+      toast.error("Not every counter has channel selected");
+      return false;
+    }
+
+    if (config?.counters.some((counter) => !counter.type)) {
+      toast.error("Not every counter has type selected");
+      return false;
+    }
+
+    if (
+      config?.counters.some((counter) => !counter.text || !counter.text.trim())
+    ) {
+      toast.error("Not every counter has text");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleCancel = () => {
+    if (!initialConfig) return;
+
+    setConfig(initialConfig);
+    setCfgChanged(false);
+    toast.success("Canceled!");
+  };
+
+  const handleSave = async () => {
+    if (!guildInfo || !config) return;
+    if (!canSubmit()) return;
+    try {
+      setSaving(true);
+      const payload: serverStatsConfigDto = {
+        ...config,
+        guildId: guildInfo.id,
+      };
+      const response = await apiClient.post(
+        UPDATE_SERVER_STATS_CONFIG_URL,
+        payload,
+      );
+      setConfig(response.data);
+      setInitialConfig(response.data);
+      setCfgChanged(false);
+      toast.success("Saved!");
+    } catch (error: any) {
+      console.log("Save error:", error.response?.data || error);
+      const status = error.response.status;
+      if (status === 404 || status === 400) {
+        toast.error(error.response.data.message);
+        return;
+      }
+      toast.error("Failed to save data!");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading || !config || !voiceChannels) return <div>Loading...</div>;
   return (
     <>
@@ -114,7 +180,7 @@ const ServerStats = () => {
           </DashboardOutletHeader.Description>
         </DashboardOutletHeader>
 
-        <div className="flex flex-col gap-4 p-4 rounder-lg bg-slate-900">
+        <div className="flex flex-col gap-4 p-4 rounded-lg bg-slate-900">
           <div className="flex gap-6 items-center">
             <p className="text-xl font-semibold">
               Server Stats Tracker Enabled
@@ -180,8 +246,8 @@ const ServerStats = () => {
       {cfgChanged && (
         <SaveChangesPopup
           container={mainRef.current}
-          onCancel={() => {}}
-          onSave={() => {}}
+          onCancel={handleCancel}
+          onSave={handleSave}
           isLoading={saving}
         />
       )}

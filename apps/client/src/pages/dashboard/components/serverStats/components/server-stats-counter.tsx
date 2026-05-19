@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2, Volume2Icon } from "lucide-react";
+import { ChartLine, Trash2, Volume2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { COUNTER_TYPES } from "@/utils/tools";
 
 interface Props {
   index: number;
@@ -49,7 +50,7 @@ const ServerStatsCounter = ({
     onChange(updatedCounter, index);
   };
   return (
-    <div className="flex flex-col gap-3 rounded-lg bg-slate-900 p4">
+    <div className="flex flex-col gap-3 rounded-lg bg-slate-900 p-4">
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold text-white">
           Counter for {counter.type}
@@ -101,9 +102,48 @@ const ServerStatsCounter = ({
       </div>
 
       <div className="flex flex-col gap-2">
+        <p className="text-lg font-semibold">Counter type</p>
+        <Select
+          value={counterData.type || ""}
+          onValueChange={(value) => {
+            if (COUNTER_TYPES.includes(value as counterType)) {
+              updateCounterData("type", value as counterType);
+            }
+          }}
+        >
+          <SelectTrigger className="w-full max-w-64 cursor-pointer text-base data-placeholder:text-slate-400">
+            <SelectValue placeholder="Select counter channel" />
+          </SelectTrigger>
+
+          <SelectContent
+            position="popper"
+            side="bottom"
+            align="start"
+            sideOffset={6}
+            className="bg-slate-950 p-1"
+          >
+            {types.map((t) => (
+              <SelectItem
+                key={t}
+                value={t}
+                className="cursor-pointer text-slate-200 focus:bg-slate-900 focus:text-white data-highlighted:bg-slate-900 data-highlighted:text-white data-[state=checked]:bg-violet-700 data-[state=checked]:text-violet-200"
+              >
+                <div className="flex items-center gap-2">
+                  <p className="text-lg opacity-65">
+                    <ChartLine />
+                  </p>
+                  <p className="text-base">{t}</p>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <div className="flex flex-col">
-          <p className="text-lg">Counter name</p>
-          <p className="text-sm opacity-85">{`Use {counter} to display counter in voice channel`}</p>
+          <p className="text-lg">Counter text</p>
+          <p className="text-sm opacity-85">{`Use {count} to display counter in voice channel`}</p>
         </div>
         <input
           value={counterData.text || ""}
