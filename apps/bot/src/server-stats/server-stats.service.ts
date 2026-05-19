@@ -16,8 +16,18 @@ export class ServerStatsService {
     for (const config of allConfigs) {
       if (!config.isEnabled) continue;
 
-      const guild = await this.client.guilds.cache.get(config.guildId);
+      const guild = await this.client.guilds
+        .fetch(config.guildId)
+        .catch(() => null);
       if (!guild) continue;
+
+      await guild.members.fetch().catch((error) => {
+        console.error(
+          `Failed to fetch members for guild ${config.guildId}:`,
+          error,
+        );
+      });
+
       for (const counter of config.counters) {
         if (!counter.channelId || !counter.type || !counter.text) continue;
         const channel = await guild.channels.cache.get(counter.channelId);
@@ -27,32 +37,44 @@ export class ServerStatsService {
           counter.text,
           counterValue,
         );
-        await channel.setName(channelName).catch();
+        await channel.setName(channelName).catch((error) => {
+          console.error(
+            `Failed to rename channel ${counter.channelId}:`,
+            error,
+          );
+        });
       }
     }
   }
-  async getCounterValue(guild: Guild, type: CounterType) {
-    let value = 0;
-
+  async getCounterValue(guild: Guild, type: CounterType): Promise<number> {
     if (type === "TOTAL_USERS") {
-      value = guild.memberCount;
-    } else if (type === "BOTS") {
-      value = guild.members.cache.filter((member) => member.user.bot).size;
-    } else if (type === "HUMANS") {
-      value = guild.members.cache.filter((member) => !member.user.bot).size;
-    } else if (type === "USERS_ACTIVE") {
-      value = guild.members.cache.filter(
-        (member) => member.presence && member.presence.status !== "offline",
+      return guild.memberCount;
+    }
+
+    if (type === "BOTS") {
+      return guild.members.cache.filter((member) => member.user.bot).size;
+    }
+
+    if (type === "HUMANS") {
+      return guild.members.cache.filter((member) => !member.user.bot).size;
+    }
+
+    if (type === "USERS_ACTIVE") {
+      return guild.presences.cache.filter((presence) =>
+        ["online", "idle", "dnd"].includes(presence.status),
       ).size;
-    } else if (type === "USERS_VOICE") {
-      value = guild.voiceStates.cache.filter((voiceState) => {
+    }
+
+    if (type === "USERS_VOICE") {
+      return guild.voiceStates.cache.filter((voiceState) => {
         const member = voiceState.member;
         return member && !member.user.bot;
       }).size;
     }
 
-    return value;
+    return 0;
   }
+
   generateChannelName(text: string, value: number) {
     const channelName = text.replaceAll("{count}", value.toString());
     return channelName;
