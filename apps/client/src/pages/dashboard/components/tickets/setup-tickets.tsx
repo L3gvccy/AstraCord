@@ -94,7 +94,13 @@ const SetupTickets = () => {
           {config.isEnabled && (
             <>
               <div className="flex flex-col gap-2">
-                <p className="text-lg font-semibold">Tickets category</p>
+                <div className="flex flex-col">
+                  <p className="text-lg font-semibold">Tickets category</p>
+                  <p className="text-sm text-muted-foreground">
+                    Select category where ticket channels will be created
+                  </p>
+                </div>
+
                 <Select
                   value={config.categoryId || ""}
                   onValueChange={(value) => {
@@ -132,7 +138,12 @@ const SetupTickets = () => {
                 </Select>
               </div>
 
-              <p className="text-lg font-semibold">Tickets embed message</p>
+              <div className="flex flex-col">
+                <p className="text-lg font-semibold">Tickets embed message</p>
+                <p className="text-sm text-muted-foreground">
+                  Configure the embed message for the tickets
+                </p>
+              </div>
 
               <div className="flex gap-3 max-w-156">
                 <div
@@ -157,7 +168,6 @@ const SetupTickets = () => {
 
                   <div className="flex flex-col">
                     <p className="text-lg">Description</p>
-                    <p className="text-sm opacity-85">{`Use {user} to mention user in message`}</p>
                     <textarea
                       value={config.description}
                       onChange={(e) => {
