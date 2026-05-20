@@ -18,7 +18,9 @@ export class TicketsService {
   async getOrCreateConfig(guildId: string) {
     const existingConfig = await this.prisma.ticketConfig.findUnique({
       where: { guildId },
-      include: { options: { include: { roles: true } } },
+      include: {
+        options: { include: { roles: true }, orderBy: { position: "asc" } },
+      },
     });
 
     if (existingConfig) return existingConfig;
@@ -45,7 +47,9 @@ export class TicketsService {
   async updateConfig(dto: TicketConfigDto) {
     const existingConfig = await this.prisma.ticketConfig.findUnique({
       where: { guildId: dto.guildId },
-      include: { options: { include: { roles: true } } },
+      include: {
+        options: { include: { roles: true }, orderBy: { position: "asc" } },
+      },
     });
 
     if (!existingConfig) {
@@ -72,7 +76,9 @@ export class TicketsService {
     const updatedCfg = await this.prisma.ticketConfig.update({
       where: { guildId: dto.guildId },
       data: {},
-      include: { options: { include: { roles: true } } },
+      include: {
+        options: { include: { roles: true }, orderBy: { position: "asc" } },
+      },
     });
 
     return updatedCfg;
@@ -97,34 +103,41 @@ export class TicketsService {
       throw new BadRequestException("Please fill all fields");
     }
 
-    const optionInDb = await this.prisma.ticketOption.upsert({
-      where: { id: option.id },
-      update: {
-        position: option.position,
-        optionEmoji: option.optionEmoji,
-        optionText: option.optionText,
-        optionDescription: option.optionDescription,
-        isEmbed: option.isEmbed,
-        title: option.title,
-        message: option.message,
-        imageUrl: option?.imageUrl,
-        thumbnailImageUrl: option?.thumbnailImageUrl,
-      },
-      create: {
-        ticketConfigId: config.id,
-        guildId: config.guildId,
-        position: option.position,
-        optionEmoji: option.optionEmoji,
-        optionText: option.optionText,
-        optionDescription: option.optionDescription,
-        isEmbed: option.isEmbed,
-        title: option.title,
-        message: option.message,
-        imageUrl: option?.imageUrl,
-        thumbnailImageUrl: option?.thumbnailImageUrl,
-      },
-      include: { roles: true },
-    });
+    let optionInDb;
+
+    if (!option.id) {
+      optionInDb = await this.prisma.ticketOption.create({
+        data: {
+          ticketConfigId: config.id,
+          guildId: config.guildId,
+          position: option.position,
+          optionEmoji: option.optionEmoji,
+          optionText: option.optionText,
+          optionDescription: option.optionDescription,
+          isEmbed: option.isEmbed,
+          title: option.title,
+          message: option.message,
+          imageUrl: option?.imageUrl,
+          thumbnailImageUrl: option?.thumbnailImageUrl,
+        },
+        include: { roles: true },
+      });
+    } else {
+      optionInDb = await this.prisma.ticketOption.update({
+        where: { id: option.id },
+        data: {
+          position: option.position,
+          optionEmoji: option.optionEmoji,
+          optionText: option.optionText,
+          optionDescription: option.optionDescription,
+          isEmbed: option.isEmbed,
+          title: option.title,
+          message: option.message,
+          imageUrl: option?.imageUrl,
+          thumbnailImageUrl: option?.thumbnailImageUrl,
+        },
+      });
+    }
 
     for (const role of optionInDb.roles) {
       const roleExistsInDto = option.roles.find(

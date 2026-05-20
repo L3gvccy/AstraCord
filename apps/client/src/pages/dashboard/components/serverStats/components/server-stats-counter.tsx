@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { ChartLine, Trash2, Volume2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { COUNTER_TYPES } from "@/utils/tools";
+import { COUNTER_TYPES, counterDisplayNames } from "@/utils/tools";
 
 interface Props {
   index: number;
@@ -52,9 +52,7 @@ const ServerStatsCounter = ({
   return (
     <div className="flex flex-col gap-3 rounded-lg bg-slate-900 p-4">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold text-white">
-          Counter for {counter.type}
-        </p>
+        <p className="text-lg font-semibold text-white">Counter #{index + 1}</p>
         <button
           type="button"
           className="flex items-center gap-2 rounded-lg bg-red-700 px-2 py-1 text-sm text-red-200 transition hover:text-red-50 cursor-pointer"
@@ -122,17 +120,17 @@ const ServerStatsCounter = ({
             sideOffset={6}
             className="bg-slate-950 p-1"
           >
-            {types.map((t) => (
+            {types.map((type) => (
               <SelectItem
-                key={t}
-                value={t}
+                key={type}
+                value={type}
                 className="cursor-pointer text-slate-200 focus:bg-slate-900 focus:text-white data-highlighted:bg-slate-900 data-highlighted:text-white data-[state=checked]:bg-violet-700 data-[state=checked]:text-violet-200"
               >
                 <div className="flex items-center gap-2">
                   <p className="text-lg opacity-65">
                     <ChartLine />
                   </p>
-                  <p className="text-base">{t}</p>
+                  <p className="text-base">{counterDisplayNames[type]}</p>
                 </div>
               </SelectItem>
             ))}

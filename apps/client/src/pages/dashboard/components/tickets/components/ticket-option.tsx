@@ -1,8 +1,9 @@
 import type { RoleType, TicketOption } from "@astracord/shared";
-import React, { useState } from "react";
-import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
+import React, { useEffect, useRef, useState } from "react";
+import { type EmojiClickData } from "emoji-picker-react";
 import ColorPicker from "@/components/ui/color-picker";
 import TicketOptionRoleAdd from "./ticket-option-role-add";
+import EmojiPickerComponent from "@/components/emoji-picker/emoji-picker";
 
 interface Props {
   option: TicketOption;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const TicketOptionComponent = ({ option, index, roles }: Props) => {
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
   const [optionData, setOptionData] = useState(option);
   const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
   const availableRoles = roles?.filter(
@@ -31,7 +33,26 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     updateOptionData("optionEmoji", emojiData.emoji);
+    setEmojiPickerOpened(false);
   };
+
+  // Handle role select close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setEmojiPickerOpened(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 p-4 rounded-xl bg-gray-950/25">
@@ -56,14 +77,19 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
           </button>
 
           {emojiPickerOpened && (
-            <div className="absolute left-0 top-14 z-50">
-              <EmojiPicker
+            <div ref={emojiPickerRef} className="absolute left-0 top-14 z-50">
+              <EmojiPickerComponent
+                onEmojiClick={handleEmojiClick}
+                width={320}
+                height={400}
+              />
+              {/* <EmojiPicker
                 className="bg-gray-900"
                 onEmojiClick={handleEmojiClick}
                 theme={Theme.DARK}
                 width={320}
                 height={400}
-              />
+              /> */}
             </div>
           )}
         </div>
@@ -201,11 +227,8 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
           option.
         </p>
       </div>
-      {/* // Select to add new roles */}
+
       <TicketOptionRoleAdd roles={availableRoles} />
-      {/* {roles?.map((role) => (
-        <p style={{ color: getRoleColor(role.color) }}>{role.name}</p>
-      ))} */}
     </div>
   );
 };

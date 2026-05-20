@@ -1,0 +1,15 @@
+.custom-emoji-picker .EmojiPickerReact {
+  --epr-bg-color: #020617;
+  --epr-text-color: #ffffff;
+  --epr-category-label-bg-color: #0f172a;
+  --epr-hover-bg-color: #333333;
+  --epr-focus-bg-color: #333333;
+  --epr-highlight-color: #8b5cf6;
+  --epr-search-input-bg-color: #2a2a2a;
+  --epr-search-input-text-color: #ffffff;
+  --epr-search-input-placeholder-color: #9ca3af;
+  --epr-border-color: rgba(255, 255, 255, 0.08);
+
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
