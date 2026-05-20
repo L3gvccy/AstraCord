@@ -1,9 +1,15 @@
-import type { RoleType, TicketOption } from "@astracord/shared";
+import type {
+  RoleType,
+  TicketOption,
+  TicketOptionRole,
+} from "@astracord/shared";
 import React, { useEffect, useRef, useState } from "react";
 import { type EmojiClickData } from "emoji-picker-react";
 import ColorPicker from "@/components/ui/color-picker";
 import TicketOptionRoleAdd from "./ticket-option-role-add";
 import EmojiPickerComponent from "@/components/emoji-picker/emoji-picker";
+import { getRoleColor } from "@/utils/tools";
+import TicketOptionRoleItem from "./ticket-option-role";
 
 interface Props {
   option: TicketOption;
@@ -29,6 +35,22 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
     };
 
     setOptionData(updatedOption);
+  };
+
+  const handleAddRole = (role: RoleType) => {
+    if (!optionData || optionData.roles.some((r) => r.roleId === role.id))
+      return;
+
+    setOptionData((prev) => {
+      const newRole: TicketOptionRole = {
+        roleId: role.id,
+        ticketOptionId: option.id as string,
+      };
+      return {
+        ...prev,
+        roles: [...prev.roles, newRole],
+      };
+    });
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
@@ -83,13 +105,6 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
                 width={320}
                 height={400}
               />
-              {/* <EmojiPicker
-                className="bg-gray-900"
-                onEmojiClick={handleEmojiClick}
-                theme={Theme.DARK}
-                width={320}
-                height={400}
-              /> */}
             </div>
           )}
         </div>
@@ -228,7 +243,22 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
         </p>
       </div>
 
-      <TicketOptionRoleAdd roles={availableRoles} />
+      <TicketOptionRoleAdd
+        roles={availableRoles}
+        handleAddRole={handleAddRole}
+      />
+
+      <div className="flex flex-wrap gap-2">
+        {roles
+          ?.filter((role) =>
+            optionData.roles.some(
+              (optDataRole) => optDataRole.roleId === role.id,
+            ),
+          )
+          .map((role) => (
+            <TicketOptionRoleItem role={role} />
+          ))}
+      </div>
     </div>
   );
 };

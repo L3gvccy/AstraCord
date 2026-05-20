@@ -5,9 +5,10 @@ import React, { useEffect, useRef, useState } from "react";
 
 interface Props {
   roles?: RoleType[];
+  handleAddRole: (role: RoleType) => void;
 }
 
-const TicketOptionRoleAdd = ({ roles }: Props) => {
+const TicketOptionRoleAdd = ({ roles, handleAddRole }: Props) => {
   const roleSelectRef = useRef<HTMLDivElement>(null);
   const [roleSelectOpened, setRoleSelectOpened] = useState(false);
 
@@ -50,6 +51,9 @@ const TicketOptionRoleAdd = ({ roles }: Props) => {
                 key={role.id}
                 className="px-4 py-2 rounded-xl hover:bg-slate-800 cursor-pointer"
                 style={{ color: getRoleColor(role.color) }}
+                onClick={() => {
+                  handleAddRole(role);
+                }}
               >
                 <p className="text-start">{role.name}</p>
               </button>
