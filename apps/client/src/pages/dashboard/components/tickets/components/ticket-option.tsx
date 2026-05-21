@@ -10,14 +10,27 @@ import TicketOptionRoleAdd from "./ticket-option-role-add";
 import EmojiPickerComponent from "@/components/emoji-picker/emoji-picker";
 import { getRoleColor } from "@/utils/tools";
 import TicketOptionRoleItem from "./ticket-option-role";
+import { Trash2 } from "lucide-react";
 
 interface Props {
   option: TicketOption;
   index: number;
   roles?: RoleType[];
+  canRemove: boolean;
+  onChange: (option: TicketOption) => void;
+  onRemove: (option: TicketOption) => void;
+  onMove: () => void;
 }
 
-const TicketOptionComponent = ({ option, index, roles }: Props) => {
+const TicketOptionComponent = ({
+  option,
+  index,
+  roles,
+  canRemove,
+  onChange,
+  onRemove,
+  onMove,
+}: Props) => {
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const [optionData, setOptionData] = useState(option);
   const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
@@ -92,9 +105,26 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
     };
   }, []);
 
+  useEffect(() => {
+    onChange(optionData);
+  }, [optionData]);
+
   return (
     <div className="flex flex-col gap-4 p-4 rounded-xl bg-gray-950/25">
-      <p className="text-lg font-semibold">Option #{index + 1}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-lg font-semibold">Option #{index + 1}</p>
+        {canRemove && (
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded-lg bg-red-700 px-2 py-1 text-sm text-red-200 transition hover:text-red-50 cursor-pointer"
+            onClick={() => onRemove(optionData)}
+          >
+            <Trash2 size={18} />
+            <p>Remove</p>
+          </button>
+        )}
+      </div>
+
       <hr />
       <div className="flex flex-col">
         <p className="text-lg font-semibold">Option configuration</p>
@@ -193,7 +223,7 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
             </div>
 
             <div className="flex flex-col">
-              <p className="text-lg">Description</p>
+              <p className="text-lg">Description *</p>
               <textarea
                 value={optionData.message || ""}
                 onChange={(e) => {
@@ -240,7 +270,7 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
         </div>
       ) : (
         <div className="flex flex-col max-w-156">
-          <p className="text-lg">Message content</p>
+          <p className="text-lg">Message content *</p>
           <textarea
             value={optionData.message || ""}
             onChange={(e) => {

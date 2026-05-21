@@ -153,7 +153,7 @@ const ServerStats = () => {
       setConfig(response.data);
       setInitialConfig(response.data);
       setCfgChanged(false);
-      toast.success("Saved!");
+      toast.success("Saved successfully!");
     } catch (error: any) {
       console.log("Save error:", error.response?.data || error);
       const status = error.response.status;

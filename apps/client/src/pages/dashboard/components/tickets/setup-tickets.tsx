@@ -11,7 +11,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 import { apiClient } from "@/utils/api-client";
-import { GET_TICKETS_CONFIG_URL } from "@/utils/constants";
+import {
+  GET_TICKETS_CONFIG_URL,
+  UPDATE_TICKETS_CONFIG_URL,
+} from "@/utils/constants";
 import type { TicketConfig, TicketOption } from "@astracord/shared";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -44,13 +47,79 @@ const SetupTickets = () => {
     }
   };
 
-  const handleSave = async () => {};
+  const canSubmit = () => {
+    if (!config?.categoryId) {
+      toast.error("Please select tickets category");
+      return false;
+    }
+    if (!config?.title) {
+      toast.error("Please fill embed title");
+      return false;
+    }
+    if (!config?.description) {
+      toast.error("Please fill embed description");
+      return false;
+    }
+    if (!config.options) {
+      toast.error("At least one option is required");
+      return false;
+    }
+    if (config.options.some((option) => !option.optionText)) {
+      toast.error("All the options must have a text");
+      return false;
+    }
+    if (config.options.some((option) => !option.message)) {
+      toast.error(
+        "All the options must have a message content or embed description",
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleSave = async () => {
+    if (!guildInfo || !config) return;
+    if (!canSubmit()) return;
+
+    try {
+      setSaving(true);
+      const res = await apiClient.post(UPDATE_TICKETS_CONFIG_URL, config);
+      setConfig(res.data);
+      setInitialConfig(res.data);
+      setCfgChanged(false);
+      toast.success("Saved successfully!");
+    } catch (error: any) {
+      console.log("Save error:", error.response?.data || error);
+      const status = error.response.status;
+      if (status === 404 || status === 400) {
+        toast.error(error.response.data.message);
+        return;
+      }
+      toast.error("Failed to save data!");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleCancel = async () => {
     if (!initialConfig) return;
 
     setConfig(initialConfig);
     setCfgChanged(false);
     toast.success("Canceled!");
+  };
+
+  const handleUpdateOption = (option: TicketOption) => {
+    setConfig((prev) => {
+      if (!prev || !prev.options) return prev;
+
+      return {
+        ...prev,
+        options: prev.options.map((prevOption) =>
+          prevOption.position === option.position ? option : prevOption,
+        ),
+      };
+    });
   };
 
   const handleAddOption = () => {
@@ -82,7 +151,27 @@ const SetupTickets = () => {
     });
   };
 
-  const handleRemoveOption = () => {};
+  const handleRemoveOption = (option: TicketOption) => {
+    if (!config || !config.options) return;
+    const newOptions =
+      config?.options
+        ?.toSorted((a, b) => a.position - b.position)
+        .filter((opt) => opt.position !== option.position)
+        .map((opt, i) => ({
+          ...opt,
+          position: i,
+        })) ?? [];
+
+    setConfig((prev) => {
+      if (!prev || !prev.options) return prev;
+
+      return {
+        ...prev,
+        options: newOptions,
+      };
+    });
+  };
+  const handleMoveOption = () => {};
 
   useEffect(() => {
     getConfig();
@@ -276,13 +365,18 @@ const SetupTickets = () => {
               <p>Add new option</p>
             </button>
 
-            {config?.options
-              ?.sort((a, b) => b.position - a.position)
+            {(config.options ?? [])
+              .toSorted((a, b) => a.position - b.position)
               .map((option, index) => (
                 <TicketOptionComponent
+                  key={option.id ?? `${option.position}-${index}`}
                   option={option}
                   index={index}
                   roles={filteredRoles}
+                  canRemove={(config.options?.length ?? 0) > 1}
+                  onChange={handleUpdateOption}
+                  onRemove={handleRemoveOption}
+                  onMove={handleMoveOption}
                 />
               ))}
           </div>
