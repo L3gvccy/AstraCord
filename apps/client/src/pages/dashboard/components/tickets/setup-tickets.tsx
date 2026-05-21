@@ -12,11 +12,12 @@ import { Switch } from "@/components/ui/switch";
 import type { DashboardOutletContext } from "@/types/dashboard-outlet-context.type";
 import { apiClient } from "@/utils/api-client";
 import { GET_TICKETS_CONFIG_URL } from "@/utils/constants";
-import type { TicketConfig } from "@astracord/shared";
+import type { TicketConfig, TicketOption } from "@astracord/shared";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import TicketOptionComponent from "./components/ticket-option";
+import { toast } from "sonner";
 
 const SetupTickets = () => {
   const { guildInfo, channels, roles, mainRef } =
@@ -44,9 +45,44 @@ const SetupTickets = () => {
   };
 
   const handleSave = async () => {};
-  const handleCancel = async () => {};
+  const handleCancel = async () => {
+    if (!initialConfig) return;
 
-  const handleAddOption = () => {};
+    setConfig(initialConfig);
+    setCfgChanged(false);
+    toast.success("Canceled!");
+  };
+
+  const handleAddOption = () => {
+    if (!config) {
+      toast.error("No config provided");
+      return;
+    }
+
+    const newOption: TicketOption = {
+      ticketConfigId: config.id,
+      guildId: config.guildId,
+      position: config.options?.length || 0,
+      optionEmoji: "🎟️",
+      optionText: "General ticket",
+      isEmbed: true,
+      title: "Ticket opened",
+      message: "Please describe your situation below",
+      color: "#9b59b6",
+      roles: [],
+    };
+
+    setConfig((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        options: [...(prev.options ?? []), newOption],
+      };
+    });
+  };
+
+  const handleRemoveOption = () => {};
 
   useEffect(() => {
     getConfig();
@@ -240,13 +276,15 @@ const SetupTickets = () => {
               <p>Add new option</p>
             </button>
 
-            {config?.options?.map((option, index) => (
-              <TicketOptionComponent
-                option={option}
-                index={index}
-                roles={filteredRoles}
-              />
-            ))}
+            {config?.options
+              ?.sort((a, b) => b.position - a.position)
+              .map((option, index) => (
+                <TicketOptionComponent
+                  option={option}
+                  index={index}
+                  roles={filteredRoles}
+                />
+              ))}
           </div>
         )}
       </div>

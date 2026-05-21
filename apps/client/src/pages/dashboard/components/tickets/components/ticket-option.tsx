@@ -53,6 +53,22 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
     });
   };
 
+  const handleRemoveRole = (role: RoleType) => {
+    if (!optionData || !optionData.roles.some((r) => r.roleId === role.id))
+      return;
+
+    const newRoles = optionData.roles.filter(
+      (optDataRole) => optDataRole.roleId !== role.id,
+    );
+
+    setOptionData((prev) => {
+      return {
+        ...prev,
+        roles: newRoles,
+      };
+    });
+  };
+
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     updateOptionData("optionEmoji", emojiData.emoji);
     setEmojiPickerOpened(false);
@@ -249,6 +265,13 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
       />
 
       <div className="flex flex-wrap gap-2">
+        {roles?.filter((role) =>
+          optionData.roles.some(
+            (optDataRole) => optDataRole.roleId === role.id,
+          ),
+        ).length == 0 && (
+          <p className="text-muted-foreground">No roles added</p>
+        )}
         {roles
           ?.filter((role) =>
             optionData.roles.some(
@@ -256,7 +279,7 @@ const TicketOptionComponent = ({ option, index, roles }: Props) => {
             ),
           )
           .map((role) => (
-            <TicketOptionRoleItem role={role} />
+            <TicketOptionRoleItem role={role} onRemove={handleRemoveRole} />
           ))}
       </div>
     </div>

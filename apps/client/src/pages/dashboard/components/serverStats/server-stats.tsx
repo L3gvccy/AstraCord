@@ -12,8 +12,8 @@ import type {
   serverStatsConfigDto,
   serverStatsCounter,
 } from "@astracord/shared";
-import { Plus, Underline } from "lucide-react";
-import React, { use, useEffect, useEffectEvent, useState } from "react";
+import { Plus } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 import ServerStatsCounter from "./components/server-stats-counter";
