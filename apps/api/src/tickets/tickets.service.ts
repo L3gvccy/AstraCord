@@ -75,7 +75,15 @@ export class TicketsService {
 
     const updatedCfg = await this.prisma.ticketConfig.update({
       where: { guildId: dto.guildId },
-      data: {},
+      data: {
+        categoryId: dto.categoryId,
+        isEnabled: dto.isEnabled,
+        title: dto.title,
+        description: dto.description,
+        color: dto.color,
+        thumbnailImageUrl: dto.thumbnailImageUrl,
+        imageUrl: dto.imageUrl,
+      },
       include: {
         options: { include: { roles: true }, orderBy: { position: "asc" } },
       },
@@ -93,13 +101,12 @@ export class TicketsService {
     option: TicketOption,
   ) {
     if (
-      !option.position ||
       !option.optionEmoji ||
       !option.optionText ||
-      !option.optionDescription ||
       !option.message ||
       !option.color
     ) {
+      console.log(option);
       throw new BadRequestException("Please fill all fields");
     }
 
@@ -133,9 +140,11 @@ export class TicketsService {
           isEmbed: option.isEmbed,
           title: option.title,
           message: option.message,
+          color: option.color,
           imageUrl: option?.imageUrl,
           thumbnailImageUrl: option?.thumbnailImageUrl,
         },
+        include: { roles: true },
       });
     }
 
@@ -150,7 +159,7 @@ export class TicketsService {
 
     for (const role of option.roles) {
       const existsInConfig = optionInDb.roles.find(
-        (roleInDb) => roleInDb.roleId === role.id,
+        (roleInDb) => roleInDb.roleId === role.roleId,
       );
       if (!existsInConfig) {
         await this.createOptionRole(role);
@@ -171,6 +180,9 @@ export class TicketsService {
         },
       },
     });
+    if (existingOptionRole) {
+      throw new BadRequestException("Cannot add two same roles to one option");
+    }
 
     if (!role.id && !existingOptionRole) {
       await this.prisma.ticketOptionRole.create({
