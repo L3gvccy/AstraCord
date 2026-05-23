@@ -39,6 +39,9 @@ export class TicketsService {
           ],
         },
       },
+      include: {
+        options: { include: { roles: true }, orderBy: { position: "asc" } },
+      },
     });
 
     return newConfig;
@@ -62,7 +65,7 @@ export class TicketsService {
 
     for (const option of existingConfig.options) {
       const existsInDto = dto?.options?.find(
-        (dtoCounter) => option.id === dtoCounter.id,
+        (dtoOption) => option.id === dtoOption.id,
       );
       if (!existsInDto) {
         await this.deleteOption(option.id);
@@ -111,6 +114,7 @@ export class TicketsService {
     }
 
     let optionInDb;
+    console.log(option);
 
     if (!option.id) {
       optionInDb = await this.prisma.ticketOption.create({
@@ -124,6 +128,7 @@ export class TicketsService {
           isEmbed: option.isEmbed,
           title: option.title,
           message: option.message,
+          color: option.color,
           imageUrl: option?.imageUrl,
           thumbnailImageUrl: option?.thumbnailImageUrl,
         },
@@ -162,7 +167,7 @@ export class TicketsService {
         (roleInDb) => roleInDb.roleId === role.roleId,
       );
       if (!existsInConfig) {
-        await this.createOptionRole(role);
+        await this.createOptionRole(role, optionInDb);
       }
     }
   }
@@ -171,11 +176,14 @@ export class TicketsService {
     await this.prisma.ticketOptionRole.delete({ where: { id } });
   }
 
-  async createOptionRole(role: TicketOptionRole) {
+  async createOptionRole(role: TicketOptionRole, option: TicketOption) {
+    if (!option.id) {
+      throw new BadRequestException("Failed to add role to option");
+    }
     const existingOptionRole = await this.prisma.ticketOptionRole.findUnique({
       where: {
         ticketOptionId_roleId: {
-          ticketOptionId: role.ticketOptionId,
+          ticketOptionId: option.id,
           roleId: role.roleId,
         },
       },
@@ -187,7 +195,7 @@ export class TicketsService {
     if (!role.id && !existingOptionRole) {
       await this.prisma.ticketOptionRole.create({
         data: {
-          ticketOptionId: role.ticketOptionId,
+          ticketOptionId: option.id,
           roleId: role.roleId,
         },
       });

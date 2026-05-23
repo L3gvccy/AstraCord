@@ -151,7 +151,7 @@ model TicketOption {
 
   roles TicketOptionRole[]
 
-  ticketConfig TicketConfig @relation(fields: [ticketConfigId], references: [guildId], onDelete: Cascade)
+  ticketConfig TicketConfig @relation(fields: [ticketConfigId], references: [id], onDelete: Cascade)
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
