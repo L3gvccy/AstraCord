@@ -109,12 +109,10 @@ export class TicketsService {
       !option.message ||
       !option.color
     ) {
-      console.log(option);
       throw new BadRequestException("Please fill all fields");
     }
 
     let optionInDb;
-    console.log(option);
 
     if (!option.id) {
       optionInDb = await this.prisma.ticketOption.create({
